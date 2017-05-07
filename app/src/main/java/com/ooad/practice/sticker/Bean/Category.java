@@ -7,16 +7,22 @@ import java.util.List;
  */
 
 public class Category {
-    private int categoryID;
+    private Integer categoryID;
     private String title;
     private String description;
     private List<Integer> stickerList;
 
-    public int getCategoryID() {
+    public Category(Integer categoryID, String title, String description){
+        this.categoryID = categoryID;
+        this.title = title;
+        this.description = description;
+    }
+
+    public Integer getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(int categoryID) {
+    public void setCategoryID(Integer categoryID) {
         this.categoryID = categoryID;
     }
 

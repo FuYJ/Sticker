@@ -32,7 +32,7 @@ public class DatabaseOpener extends SQLiteOpenHelper {
         db.execSQL(Database.CREATE_STICKER_TABLE);
         db.execSQL(Database.CREATE_CATEGORY_TABLE);
         db.execSQL(Database.CREATE_TAG_TABLE);
-        db.execSQL(Database.CREATE_STICKERTAGS_TABLE);
+        db.execSQL(Database.CREATE_STICKER_TAGS_TABLE);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class DatabaseOpener extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_STICKER_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_CATEGORY_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_TAG_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_STICKERTAGS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_STICKER_TAGS_TABLE);
 
         onCreate(db);
     }

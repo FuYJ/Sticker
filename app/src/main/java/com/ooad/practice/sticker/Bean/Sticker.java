@@ -8,28 +8,38 @@ import java.util.List;
  */
 
 public class Sticker {
-    private int stickerID;
-    private int categoryID;
+    private Integer stickerID;
+    private Integer categoryID;
     private String title;
-    private Date deadline;
-    private List<Integer> tagList;
     private String description;
-    private Date remindTime;
+    private Integer deadline;
+    private Integer remindTime;
+    private List<Integer> tagList;
     private Boolean isFinished;
 
-    public int getStickerID() {
+    public Sticker(Integer stickerID, Integer categoryID, String title, String description, Integer deadline, Integer remindTime, Boolean isFinished){
+        this.stickerID = stickerID;
+        this.categoryID = categoryID;
+        this.title = title;
+        this.description = description;
+        this.deadline = deadline;
+        this.remindTime = remindTime;
+        this.isFinished = isFinished;
+    }
+
+    public Integer getStickerID() {
         return stickerID;
     }
 
-    public void setStickerID(int stickerID) {
+    public void setStickerID(Integer stickerID) {
         this.stickerID = stickerID;
     }
 
-    public int getCategoryID() {
+    public Integer getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(int categoryID) {
+    public void setCategoryID(Integer categoryID) {
         this.categoryID = categoryID;
     }
 
@@ -41,11 +51,11 @@ public class Sticker {
         this.title = title;
     }
 
-    public Date getDeadline() {
+    public Integer getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(Integer deadline) {
         this.deadline = deadline;
     }
 
@@ -65,11 +75,11 @@ public class Sticker {
         this.description = description;
     }
 
-    public Date getRemindTime() {
+    public Integer getRemindTime() {
         return remindTime;
     }
 
-    public void setRemindTime(Date remindTime) {
+    public void setRemindTime(Integer remindTime) {
         this.remindTime = remindTime;
     }
 

@@ -9,11 +9,11 @@ import android.database.sqlite.SQLiteDatabase;
  * Created by fuyiru on 2017/5/5.
  */
 
-public class Database {
+public class Database implements IDatabase {
     public static final String STICKER_TABLE = "STICKER";
     public static final String CATEGORY_TABLE = "CATEGORY";
     public static final String TAG_TABLE = "TAG";
-    public static final String STICKERTAGS_TABLE = "STICKERTAGS";
+    public static final String STICKER_TAGS_TABLE = "STICKER_TAGS";
 
     //Sticker
     public static final String STICKER_ID = "_id";
@@ -31,7 +31,7 @@ public class Database {
                     STICKER_DESCRIPTION + " TEXT, " +
                     STICKER_DEADLINE + " DATE, " +
                     STICKER_REMIND_TIME + " DATE, " +
-                    STICKER_IS_FINISHED + " BOOLEAN NOT NULL)";
+                    STICKER_IS_FINISHED + " INTEGER NOT NULL)";
 
     //Category
     public static final String CATEGORY_ID = "_id";
@@ -58,12 +58,12 @@ public class Database {
                     TAG_COLOR_B + " INTEGER NOT NULL)";
 
     //Sticker_tag_association
-    public static final String STICKERTAGS_TAG_ID = "tagID";
-    public static final String STICKERTAGS_STICKER_ID = "stickerID";
-    public static final String CREATE_STICKERTAGS_TABLE =
-            "CREATE TABLE " + STICKERTAGS_TABLE + " (" +
-                    STICKERTAGS_TAG_ID + " INTEGER NOT NULL, " +
-                    STICKERTAGS_STICKER_ID + " INTEGER NOT NULL)";
+    public static final String STICKER_TAGS_TAG_ID = "tagID";
+    public static final String STICKER_TAGS_STICKER_ID = "stickerID";
+    public static final String CREATE_STICKER_TAGS_TABLE =
+            "CREATE TABLE " + STICKER_TAGS_TABLE + " (" +
+                    STICKER_TAGS_TAG_ID + " INTEGER NOT NULL, " +
+                    STICKER_TAGS_STICKER_ID + " INTEGER NOT NULL)";
 
     private SQLiteDatabase db;
 
@@ -88,9 +88,9 @@ public class Database {
         return result;
     }
 
-    public Cursor retrieve(String tableName, Integer ID, String orderBy){
+    public Cursor retrieve(String tableName, Integer ID){
         String where = "_id = " + ID.toString();
-        Cursor result = db.query(tableName, null, where, null, null, null, orderBy);
+        Cursor result = db.query(tableName, null, where, null, null, null, null);
         return result;
     }
 

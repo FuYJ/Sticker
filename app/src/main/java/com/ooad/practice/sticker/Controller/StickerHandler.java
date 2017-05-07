@@ -1,6 +1,7 @@
 package com.ooad.practice.sticker.Controller;
 
 import com.ooad.practice.sticker.Bean.Sticker;
+import com.ooad.practice.sticker.Model.StickerList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,32 +17,32 @@ public class StickerHandler {
     }
 
     public List<Sticker> getStickerList(String keyword, List<String> options){
-        ArrayList<Sticker> stickerList = new ArrayList<>();
-
+        List<Sticker> stickerList;
+        stickerList = StickerList.getInstance().getStickerList(keyword);
         return stickerList;
     }
 
     public void editSticker(Sticker sticker){
-
+        StickerList.getInstance().setSticker(sticker);
     }
 
     public void addSticker(Sticker sticker){
-
+        StickerList.getInstance().setSticker(sticker);
     }
 
     public void deleteSticker(Sticker sticker){
-
+        StickerList.getInstance().deleteSticker(sticker);
     }
 
     public List<Sticker> getEmergentList(){
-        ArrayList<Sticker> stickerList = new ArrayList<>();
-
+        List<Sticker> stickerList;
+        stickerList = StickerList.getInstance().getEmergentList();
         return stickerList;
     }
 
     public List<Sticker> getLatestStickers(){
-        ArrayList<Sticker> stickerList = new ArrayList<>();
-
+        List<Sticker> stickerList;
+        stickerList = StickerList.getInstance().getLatestStickers();
         return stickerList;
     }
 
