@@ -14,6 +14,7 @@ import Adapter.MyAdapter;
 public class category_list extends ActionBarActivity {
     private ListView listView01;
     private String[] show_text = {"未帶鑰匙","網路問題","電腦故障","商店","診所","未帶鑰匙","網路問題","電腦故障","商店","診所"};
+    private int[] isButtonVisible = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private ArrayAdapter listAdapter;
     private TextView textView01;
 
@@ -24,7 +25,6 @@ public class category_list extends ActionBarActivity {
 
         listView01 = (ListView)findViewById(R.id.listView1);
 //        listAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,show_text);
-        listView01.setAdapter(new MyAdapter(category_list.this, show_text, show_text));
-        listView01.setAdapter(new MyAdapter(category_list.this, show_text, show_text));
+        listView01.setAdapter(new MyAdapter(category_list.this, show_text, isButtonVisible));
     }
 }

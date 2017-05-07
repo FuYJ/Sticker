@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.ooad.practice.sticker.R;
@@ -15,16 +16,17 @@ import com.ooad.practice.sticker.R;
 
 public class MyAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    String [] key;
-    String [] value;
-    public MyAdapter(Context c, String [] key, String [] value){
+    String [] category_name;
+    int[] isButtonVisible;
+    int UI_vis[] = {View.GONE,View.VISIBLE};
+    public MyAdapter(Context c, String [] category_name, int[] isButtonVisible){
         inflater = LayoutInflater.from(c);
-        this.key = key;
-        this.value = value;
+        this.category_name = category_name;
+        this.isButtonVisible = isButtonVisible;
     }
     @Override
     public int getCount() {
-        return key.length;
+        return category_name.length;
     }
 
     @Override
@@ -39,12 +41,14 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        TextView name;
+        Button createButton;
         view = inflater.inflate(R.layout.category_item,viewGroup,false);
-        TextView key2,value2;
-        key2 = (TextView) view.findViewById(R.id.key);
-        value2 = (TextView) view.findViewById(R.id.value);
-        key2.setText(key[i]);
-        value2.setText(value[i]);
+        name = (TextView) view.findViewById(R.id.category_name);
+        createButton = (Button) view.findViewById(R.id.create);
+        name.setText(category_name[i]);
+        createButton.setVisibility(UI_vis[isButtonVisible[i]]);
+        name.setVisibility(UI_vis[(isButtonVisible[i] + 1) % 2]);
         return view;
     }
 }
