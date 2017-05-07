@@ -5,6 +5,8 @@ import android.database.Cursor;
 
 import com.ooad.practice.sticker.Bean.Category;
 import com.ooad.practice.sticker.Database.Database;
+import com.ooad.practice.sticker.Database.IDatabase;
+import com.ooad.practice.sticker.MainApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +17,10 @@ import java.util.List;
 
 public class CategoryList {
     private static CategoryList instance;
-    private Database db;
+    private IDatabase db;
 
     private CategoryList(){
-
+        db = new Database(MainApplication.getContext());
     }
 
     public static CategoryList getInstance(){
