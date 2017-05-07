@@ -12,7 +12,7 @@
         android:padding="4dp"
         android:text="Key"
         android:textAlignment="center"
-        android:textSize="20sp" />
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/create"
@@ -24,22 +24,24 @@
         android:textSize="24sp" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/edit"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/category_name"
-        android:layout_below="@+id/create" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/create"
+        android:text="編輯"
+        android:visibility="visible" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/delete"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:layout_toLeftOf="@+id/button3"
         android:layout_alignBottom="@+id/category_name"
-        android:layout_below="@+id/create" />
+        android:layout_below="@+id/create"
+        android:layout_toLeftOf="@+id/edit"
+        android:text="刪除"
+        android:visibility="visible" />
 
 </RelativeLayout>

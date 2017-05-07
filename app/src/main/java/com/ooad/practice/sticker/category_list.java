@@ -26,5 +26,14 @@ public class category_list extends ActionBarActivity {
         listView01 = (ListView)findViewById(R.id.listView1);
 //        listAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,show_text);
         listView01.setAdapter(new MyAdapter(category_list.this, show_text, isButtonVisible));
+        listView01.setOnItemClickListener(new OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView parent, View view, int position, long id){
+                Toast.makeText(getApplicationContext(),
+                        "點選的是"+show_text[position], //postition是指點選到的index
+                        Toast.LENGTH_SHORT).show();
+//                listView01.setVisibility(view.INVISIBLE); //隱藏ListView
+            }
+        });
     }
 }

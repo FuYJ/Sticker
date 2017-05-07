@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ooad.practice.sticker.R;
 
@@ -40,15 +41,30 @@ public class MyAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         TextView name;
-        Button createButton;
+        Button createButton, deleteButton, editButton;
         view = inflater.inflate(R.layout.category_item,viewGroup,false);
         name = (TextView) view.findViewById(R.id.category_name);
         createButton = (Button) view.findViewById(R.id.create);
+        deleteButton = (Button) view.findViewById(R.id.delete);
+        editButton = (Button) view.findViewById(R.id.edit);
         name.setText(category_name[i]);
         createButton.setVisibility(UI_vis[isButtonVisible[i]]);
         name.setVisibility(UI_vis[(isButtonVisible[i] + 1) % 2]);
+//        deleteButton.setOnClickListener();
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "Delete " + i, Toast.LENGTH_SHORT).show();
+            }
+        });
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), "Edir " + i, Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
 }
