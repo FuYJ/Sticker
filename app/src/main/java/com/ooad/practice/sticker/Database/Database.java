@@ -65,6 +65,9 @@ public class Database implements IDatabase {
                     STICKER_TAGS_TAG_ID + " INTEGER NOT NULL, " +
                     STICKER_TAGS_STICKER_ID + " INTEGER NOT NULL)";
 
+    public static final String ORDER_ASC = " ASC";
+    public static final String ORDER_DESC = " DESC";
+
     private SQLiteDatabase db;
 
     public Database(Context context){
@@ -85,6 +88,11 @@ public class Database implements IDatabase {
 
     public Cursor retrieve(String tableName, String where, String orderBy){
         Cursor result = db.query(tableName, null, where, null, null, null, orderBy);
+        return result;
+    }
+
+    public Cursor retrieve(String tableName, String orderBy){
+        Cursor result = db.query(tableName, null, null, null, null, null, orderBy);
         return result;
     }
 

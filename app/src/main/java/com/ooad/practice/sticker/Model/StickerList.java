@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import com.ooad.practice.sticker.Bean.Sticker;
 import com.ooad.practice.sticker.Database.Database;
+import com.ooad.practice.sticker.Database.IDatabase;
 import com.ooad.practice.sticker.MainApplication;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class StickerList {
     private static StickerList instance;
-    private Database db;
+    private IDatabase db;
 
     private StickerList(){
         db = new Database(MainApplication.getContext());

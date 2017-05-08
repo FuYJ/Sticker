@@ -18,6 +18,8 @@ public interface IDatabase {
 
     Cursor retrieve(String tableName, String where, String orderBy);
 
+    Cursor retrieve(String tableName, String orderBy);
+
     Cursor retrieve(String tableName, Integer ID);
 
     void delete(String tableName, String where);
