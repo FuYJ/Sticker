@@ -1,8 +1,8 @@
 package com.ooad.practice.sticker.Controller;
 
 import com.ooad.practice.sticker.Bean.Tag;
+import com.ooad.practice.sticker.Model.TagList;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,25 +11,21 @@ import java.util.List;
 
 public class TagHandler {
 
-    public TagHandler(){
-
-    }
-
     public List<Tag> getTagList(){
-        ArrayList<Tag> tagList = new ArrayList<>();
-
+        List<Tag> tagList;
+        tagList = TagList.getInstance().getTagList();
         return tagList;
     }
 
     public void addTag(Tag tag){
-
+        TagList.getInstance().setTag(tag);
     }
 
     public void editTag(Tag tag){
-
+        TagList.getInstance().setTag(tag);
     }
 
     public void deleteTag(Tag tag){
-
+        TagList.getInstance().deleteTag(tag);
     }
 }

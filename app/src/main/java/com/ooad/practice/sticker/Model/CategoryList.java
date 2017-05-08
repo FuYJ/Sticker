@@ -47,7 +47,9 @@ public class CategoryList {
                 String description = cursor.getString(2);
                 Category category = new Category(categoryID, title, description);
                 result.add(category);
+                cursor.moveToNext();
             }
+            cursor.close();
         }
 
         return result;

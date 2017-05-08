@@ -12,10 +12,6 @@ import java.util.List;
 
 public class StickerHandler {
 
-    public StickerHandler(){
-
-    }
-
     public List<Sticker> getStickerList(String keyword, List<String> options){
         List<Sticker> stickerList;
         stickerList = StickerList.getInstance().getStickerList(keyword);
@@ -45,5 +41,4 @@ public class StickerHandler {
         stickerList = StickerList.getInstance().getLatestStickers();
         return stickerList;
     }
-
 }

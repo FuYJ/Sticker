@@ -1,6 +1,5 @@
 package com.ooad.practice.sticker.Model;
 
-import android.app.Application;
 import android.content.ContentValues;
 import android.database.Cursor;
 
@@ -48,9 +47,10 @@ public class StickerList {
                 Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
                 Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
                 result.add(sticker);
+                cursor.moveToNext();
             }
+            cursor.close();
         }
-
         return result;
     }
 

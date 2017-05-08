@@ -12,10 +12,6 @@ import java.util.List;
 
 public class CategoryHandler {
 
-    public CategoryHandler(){
-
-    }
-
     public void addCategory(Category category){
         CategoryList.getInstance().setCategory(category);
     }

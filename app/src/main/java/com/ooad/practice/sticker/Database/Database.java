@@ -110,5 +110,4 @@ public class Database implements IDatabase {
         String where = "_id = " + ID.toString();
         db.delete(tableName, where, null);
     }
-
 }

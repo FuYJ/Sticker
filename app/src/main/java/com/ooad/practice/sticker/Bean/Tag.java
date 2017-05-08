@@ -1,5 +1,6 @@
 package com.ooad.practice.sticker.Bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,17 @@ import java.util.List;
 public class Tag {
     private String title;
     private List<Integer> color;
-    private int tagID;
+    private Integer tagID;
+
+    public Tag(Integer tagID, String title, int colorR, int colorG, int colorB){
+        this.tagID = tagID;
+        this.title = title;
+        List<Integer> color = new ArrayList<>();
+        color.add(colorR);
+        color.add(colorG);
+        color.add(colorB);
+        this.color = color;
+    }
 
     public String getTitle() {
         return title;
@@ -27,11 +38,11 @@ public class Tag {
         this.color = color;
     }
 
-    public int getTagID() {
+    public Integer getTagID() {
         return tagID;
     }
 
-    public void setTagID(int tagID) {
+    public void setTagID(Integer tagID) {
         this.tagID = tagID;
     }
 }

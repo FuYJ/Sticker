@@ -23,7 +23,6 @@ public class DatabaseOpener extends SQLiteOpenHelper {
             database = new DatabaseOpener(context, DATABASE_NAME,
                     null, DB_VERSION).getWritableDatabase();
         }
-
         return database;
     }
 
