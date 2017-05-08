@@ -32,8 +32,12 @@ public class CategoryList {
 
     public List<Category> getCategoryList(String keyword){
         List<Category> result = new ArrayList<>();
+        Cursor cursor;
 
-        Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " LIKE %" + keyword + "%", Database.CATEGORY_TITLE);
+        if(keyword == null)
+            cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_ID + Database.ORDER_ASC);
+        else
+            cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " LIKE %" + keyword + "%", Database.CATEGORY_ID + Database.ORDER_ASC);
         int rowsNum = cursor.getCount();
         if(rowsNum > 0){
             cursor.moveToFirst();

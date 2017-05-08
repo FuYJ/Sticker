@@ -2,6 +2,8 @@ package com.ooad.practice.sticker.Model;
 
 import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Database.Database;
+import com.ooad.practice.sticker.Database.IDatabase;
+import com.ooad.practice.sticker.MainApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +14,10 @@ import java.util.List;
 
 public class TagList {
     private static TagList instance;
-    private Database db;
+    private IDatabase db;
 
     private TagList() {
-
+        db = new Database(MainApplication.getContext());
     }
 
     public static TagList getInstance(){
