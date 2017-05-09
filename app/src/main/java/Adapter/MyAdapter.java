@@ -11,7 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ooad.practice.sticker.Bean.Category;
+import com.ooad.practice.sticker.Controller.CategoryHandler;
 import com.ooad.practice.sticker.R;
+import com.ooad.practice.sticker.category_list;
 
 import java.util.List;
 
@@ -25,11 +27,15 @@ public class MyAdapter extends BaseAdapter {
     int[] isCreateButtonVisible;
     int[] isEditButtonVisible;
     int UI_vis[] = {View.GONE,View.VISIBLE};
-    public MyAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible, int[] isEditButtonVisible){
+    private CategoryHandler handler = new CategoryHandler();
+    private Context context;
+
+    public MyAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible, int[] isEditButtonVisible, Context context){
         inflater = LayoutInflater.from(c);
         this.categoryList = categoryList;
         this.isCreateButtonVisible = isCreateButtonVisible;
         this.isEditButtonVisible = isEditButtonVisible;
+        this.context = context;
     }
     @Override
     public int getCount() {
@@ -75,7 +81,17 @@ public class MyAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         TextView title = (TextView)dialog.findViewById(R.id.category_title_input);
-                        Toast.makeText(v.getContext(), "Create " + title.getText().toString(), Toast.LENGTH_SHORT).show();
+                        TextView description = (TextView)dialog.findViewById(R.id.category_description_input);
+                        if(!title.getText().toString().isEmpty()){
+                            handler.addCategory(new Category(0, title.getText().toString(), description.getText().toString()));
+                            dialog.dismiss();
+                            ((category_list)context).updateView();
+                            if(context instanceof category_list){
+                                ((category_list)context).updateView();
+                            }
+                        }
+                        else
+                            Toast.makeText(v.getContext(), "Title沒有輸入", Toast.LENGTH_SHORT).show();
                     }
                 });
                 categoryCancel.setOnClickListener(new View.OnClickListener() {
@@ -89,15 +105,55 @@ public class MyAdapter extends BaseAdapter {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Delete " + i, Toast.LENGTH_SHORT).show();
+                handler.deleteCategory(categoryList.get(i - 1));
+                ((category_list)context).updateView();
+                if(context instanceof category_list){
+                    ((category_list)context).updateView();
+                }
             }
         });
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Edir " + i, Toast.LENGTH_SHORT).show();
+                final Dialog dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.popup_create_category);
+                dialog.setTitle("編輯分類");
+                Button categoryCreate = (Button)dialog.findViewById(R.id.category_create);
+                Button categoryCancel = (Button)dialog.findViewById(R.id.category_cancel);
+                final TextView title = (TextView)dialog.findViewById(R.id.category_title_input);
+                final TextView description = (TextView)dialog.findViewById(R.id.category_description_input);
+                title.setText(categoryList.get(i - 1).getTitle());
+                description.setText(categoryList.get(i - 1).getDescription());
+                categoryCreate.setText("編輯");
+                dialog.show();
+                categoryCreate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!title.getText().toString().isEmpty()){
+                            handler.editCategory(new Category(categoryList.get(i - 1).getCategoryID(), title.getText().toString(), description.getText().toString()));
+                            dialog.dismiss();
+                            ((category_list)context).updateView();
+                            if(context instanceof category_list){
+                                ((category_list)context).updateView();
+                            }
+                        }
+                        else
+                            Toast.makeText(v.getContext(), "Title沒有輸入", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                categoryCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
         return view;
+    }
+
+    private void updateView(){
+        categoryList = handler.getCategoryList(null);
+
     }
 }
