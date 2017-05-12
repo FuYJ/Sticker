@@ -29,6 +29,7 @@ public class MyAdapter extends BaseAdapter {
     int UI_vis[] = {View.GONE,View.VISIBLE};
     private CategoryHandler handler = new CategoryHandler();
     private Context context;
+    private Dialog dialog;
 
     public MyAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible, int[] isEditButtonVisible, Context context){
         inflater = LayoutInflater.from(c);
@@ -68,14 +69,27 @@ public class MyAdapter extends BaseAdapter {
         name.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         deleteButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
         editButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
-        createButton.setOnClickListener(new View.OnClickListener() {
+        createButton.setOnClickListener(createListener());
+        deleteButton.setOnClickListener(reconfirmListener(i));
+        editButton.setOnClickListener(editListener(i));
+        return view;
+    }
+
+    private void updateView(){
+        categoryList = handler.getCategoryList(null);
+
+    }
+
+    private View.OnClickListener createListener(){
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(v.getContext());
-                dialog.setContentView(R.layout.popup_create_category);
+                dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.popup_category);
                 dialog.setTitle("新增分類");
                 Button categoryCreate = (Button)dialog.findViewById(R.id.category_create);
                 Button categoryCancel = (Button)dialog.findViewById(R.id.category_cancel);
+                categoryCreate.setText("新增");
                 dialog.show();
                 categoryCreate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -85,7 +99,6 @@ public class MyAdapter extends BaseAdapter {
                         if(!title.getText().toString().isEmpty()){
                             handler.addCategory(new Category(0, title.getText().toString(), description.getText().toString()));
                             dialog.dismiss();
-                            ((category_list)context).updateView();
                             if(context instanceof category_list){
                                 ((category_list)context).updateView();
                             }
@@ -101,38 +114,30 @@ public class MyAdapter extends BaseAdapter {
                     }
                 });
             }
-        });
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+        };
+    }
+
+    private View.OnClickListener editListener(final int index){
+        return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handler.deleteCategory(categoryList.get(i - 1));
-                ((category_list)context).updateView();
-                if(context instanceof category_list){
-                    ((category_list)context).updateView();
-                }
-            }
-        });
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(v.getContext());
-                dialog.setContentView(R.layout.popup_create_category);
+                dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.popup_category);
                 dialog.setTitle("編輯分類");
-                Button categoryCreate = (Button)dialog.findViewById(R.id.category_create);
+                Button categoryEdit = (Button)dialog.findViewById(R.id.category_create);
                 Button categoryCancel = (Button)dialog.findViewById(R.id.category_cancel);
                 final TextView title = (TextView)dialog.findViewById(R.id.category_title_input);
                 final TextView description = (TextView)dialog.findViewById(R.id.category_description_input);
-                title.setText(categoryList.get(i - 1).getTitle());
-                description.setText(categoryList.get(i - 1).getDescription());
-                categoryCreate.setText("編輯");
+                title.setText(categoryList.get(index - 1).getTitle());
+                description.setText(categoryList.get(index - 1).getDescription());
+                categoryEdit.setText("編輯");
                 dialog.show();
-                categoryCreate.setOnClickListener(new View.OnClickListener() {
+                categoryEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(!title.getText().toString().isEmpty()){
-                            handler.editCategory(new Category(categoryList.get(i - 1).getCategoryID(), title.getText().toString(), description.getText().toString()));
+                            handler.editCategory(new Category(categoryList.get(index - 1).getCategoryID(), title.getText().toString(), description.getText().toString()));
                             dialog.dismiss();
-                            ((category_list)context).updateView();
                             if(context instanceof category_list){
                                 ((category_list)context).updateView();
                             }
@@ -148,12 +153,39 @@ public class MyAdapter extends BaseAdapter {
                     }
                 });
             }
-        });
-        return view;
+        };
     }
 
-    private void updateView(){
-        categoryList = handler.getCategoryList(null);
-
+    private View.OnClickListener reconfirmListener(final int index){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.popup_reconfirmation);
+                dialog.setTitle("確認");
+                TextView text = (TextView)dialog.findViewById(R.id.reconfirm_text);
+                Button confirm = (Button)dialog.findViewById(R.id.confirm);
+                Button concel = (Button)dialog.findViewById(R.id.concel);
+                text.setText("確定要刪除嗎?");
+                dialog.show();
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        handler.deleteCategory(categoryList.get(index - 1));
+                        ((category_list)context).updateView();
+                        if(context instanceof category_list){
+                            ((category_list)context).updateView();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                concel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        };
     }
 }
