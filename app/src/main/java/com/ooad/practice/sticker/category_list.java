@@ -1,5 +1,6 @@
 package com.ooad.practice.sticker;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -20,26 +21,52 @@ public class category_list extends ActionBarActivity {
     private List<Category> categoryList;
     private CategoryHandler handler = new CategoryHandler();
     private ListView listView;
-    private String[] show_text = {"未帶鑰匙","網路問題","電腦故障","商店","診所","未帶鑰匙","網路問題","電腦故障","商店","診所"};
-    private int[] isButtonVisible = {1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private int isVisible = 0;
+    private int[] isCreateButtonVisible;
+    private int[] isEditButtonVisible;
+    private int length;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
 
-        categoryList = handler.getCategoryList("");
+        Button settingButton = (Button)findViewById(R.id.setting);
 
-        listView = (ListView)findViewById(R.id.listView1);
-//        listAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,show_text);
-        listView.setAdapter(new MyAdapter(category_list.this, show_text, isButtonVisible));
+        updateView();
+
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isVisible = (isVisible + 1) % 2;
+                updateView();
+            }
+        });
+    }
+
+    public void updateView(){
+        categoryList = handler.getCategoryList(null);
+        length = categoryList.size();
+        isCreateButtonVisible = new int[length + 1];
+        isEditButtonVisible = new int[length + 1];
+
+        for(int i = 0; i < length + 1; i++){
+            if(i == 0){
+                isCreateButtonVisible[i] = 1;
+                isEditButtonVisible[i] = 0;
+            }
+            else{
+                isCreateButtonVisible[i] = 0;
+                isEditButtonVisible[i] = isVisible;
+            }
+        }
+
+        listView = (ListView)findViewById(R.id.listView);
+        listView.setAdapter(new MyAdapter(category_list.this, categoryList, isCreateButtonVisible, isEditButtonVisible, this));
         listView.setOnItemClickListener(new OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id){
-                Toast.makeText(getApplicationContext(),
-                        "點選的是"+show_text[position], //postition是指點選到的index
-                        Toast.LENGTH_SHORT).show();
-//                listView01.setVisibility(view.INVISIBLE); //隱藏ListView
+
             }
         });
     }
