@@ -123,6 +123,5 @@
     <orderEntry type="library" exported="" scope="TEST" name="rules-0.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jsr305-2.0.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-idling-resource-2.1" level="project" />
-    <orderEntry type="library" exported="" name="android-android-21" level="project" />
   </component>
 </module>
