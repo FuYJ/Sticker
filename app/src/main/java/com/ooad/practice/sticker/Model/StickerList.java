@@ -8,7 +8,10 @@ import com.ooad.practice.sticker.Database.Database;
 import com.ooad.practice.sticker.Database.IDatabase;
 import com.ooad.practice.sticker.MainApplication;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,10 +45,10 @@ public class StickerList {
                 Integer categoryID = cursor.getInt(1);
                 String title = cursor.getString(2);
                 String description = cursor.getString(3);
-                Integer deadline = cursor.getInt(4);
-                Integer remindTime = cursor.getInt(5);
+                Long deadline = cursor.getLong(4);
+                Long remindTime = cursor.getLong(5);
                 Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
-                Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
+                Sticker sticker = new Sticker(stickerID, categoryID, title, description, calculateDate(deadline), calculateDate(remindTime), isFinished);
                 result.add(sticker);
                 cursor.moveToNext();
             }
@@ -59,8 +62,8 @@ public class StickerList {
         cv.put(Database.STICKER_CATEGORY_ID, sticker.getCategoryID());
         cv.put(Database.STICKER_TITLE, sticker.getTitle());
         cv.put(Database.STICKER_DESCRIPTION, sticker.getDescription());
-        cv.put(Database.STICKER_DEADLINE, sticker.getDeadline());
-        cv.put(Database.STICKER_REMIND_TIME, sticker.getRemindTime());
+        cv.put(Database.STICKER_DEADLINE, calculateDate(sticker.getDeadline()));
+        cv.put(Database.STICKER_REMIND_TIME, calculateDate(sticker.getRemindTime()));
         cv.put(Database.STICKER_IS_FINISHED, sticker.getFinished());
         if(sticker.getStickerID() == 0)
             db.create(Database.STICKER_TABLE, cv);
@@ -84,7 +87,21 @@ public class StickerList {
         return result;
     }
 
-    public String calculateDate(){
-        return null;
+    public String calculateDate(Long date){
+        String formattedDate;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        formattedDate = sdf.format(date);
+        return formattedDate;
+    }
+
+    public Long calculateDate(String date){
+        Long dateTime = 0L;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            dateTime = sdf.parse(date).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateTime;
     }
 }

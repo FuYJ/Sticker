@@ -55,14 +55,21 @@ public class CategoryList {
         return result;
     }
 
-    public void setCategory(Category category){
+    public int setCategory(Category category){
         ContentValues cv = new ContentValues();
         cv.put(Database.CATEGORY_TITLE, category.getTitle());
         cv.put(Database.CATEGORY_DESCRIPTION, category.getDescription());
-        if(category.getCategoryID() == 0)
-            db.create(Database.CATEGORY_TABLE, cv);
+        if(category.getCategoryID() == 0){
+            Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = " + category.getTitle(), null);
+            int rowsNum = cursor.getCount();
+            if(rowsNum > 0)
+                return -1;
+            else
+                db.create(Database.CATEGORY_TABLE, cv);
+        }
         else
             db.update(Database.CATEGORY_TABLE, Database.CATEGORY_ID + "=" + category.getCategoryID().toString(),cv);
+        return 0;
     }
 
     public void deleteCategory(Category category) {

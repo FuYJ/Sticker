@@ -12,12 +12,12 @@ public class Sticker {
     private Integer categoryID;
     private String title;
     private String description;
-    private Integer deadline;
-    private Integer remindTime;
+    private String deadline;
+    private String remindTime;
     private List<Integer> tagList;
     private Boolean isFinished;
 
-    public Sticker(Integer stickerID, Integer categoryID, String title, String description, Integer deadline, Integer remindTime, Boolean isFinished){
+    public Sticker(Integer stickerID, Integer categoryID, String title, String description, String deadline, String remindTime, Boolean isFinished){
         this.stickerID = stickerID;
         this.categoryID = categoryID;
         this.title = title;
@@ -51,11 +51,11 @@ public class Sticker {
         this.title = title;
     }
 
-    public Integer getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Integer deadline) {
+    public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
 
@@ -75,11 +75,11 @@ public class Sticker {
         this.description = description;
     }
 
-    public Integer getRemindTime() {
+    public String getRemindTime() {
         return remindTime;
     }
 
-    public void setRemindTime(Integer remindTime) {
+    public void setRemindTime(String remindTime) {
         this.remindTime = remindTime;
     }
 
