@@ -159,6 +159,21 @@ public class DatabaseTest {
                 cursor.moveToNext();
             }
         }
+
+        cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = \"Test0\"", Database.CATEGORY_ID + Database.ORDER_ASC);
+        rowsNum = cursor.getCount();
+        assertEquals(1, rowsNum);
+        if(rowsNum > 0){
+            cursor.moveToFirst();
+            Integer categoryID = cursor.getInt(0);
+            title = cursor.getString(1);
+            description = cursor.getString(2);
+            assertEquals(1, categoryID.longValue());
+            assertEquals("Test0", title);
+            assertEquals("Test", description);
+            cursor.moveToNext();
+        }
+
         cursor.close();
 
         db.delete(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " LIKE \"%Test%\"");
