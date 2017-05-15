@@ -25,6 +25,8 @@ public class category_list extends ActionBarActivity {
     private int[] isCreateButtonVisible;
     private int[] isEditButtonVisible;
     private int length;
+    private String searchKey;
+    private EditText searchInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,9 @@ public class category_list extends ActionBarActivity {
         setContentView(R.layout.activity_category_list);
 
         Button settingButton = (Button)findViewById(R.id.setting);
-
+        searchInput = (EditText)findViewById(R.id.searchInput);
+        searchInput.setOnKeyListener(searchInputLinstener());
+//        Toast.makeText(this, searchInput.getText().toString(), Toast.LENGTH_SHORT).show();
         updateView();
 
         settingButton.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +46,7 @@ public class category_list extends ActionBarActivity {
                 updateView();
             }
         });
+
     }
 
     public void updateView(){
@@ -69,5 +74,17 @@ public class category_list extends ActionBarActivity {
 
             }
         });
+    }
+
+    private View.OnKeyListener searchInputLinstener(){
+        return new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    Toast.makeText(v.getContext(), "Test", Toast.LENGTH_SHORT);
+                    return true;
+                }
+                return false;
+            }
+        };
     }
 }

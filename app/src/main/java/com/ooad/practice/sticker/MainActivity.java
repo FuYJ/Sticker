@@ -1,15 +1,26 @@
 package com.ooad.practice.sticker;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Map;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener{
+public class MainActivity extends ActionBarActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +28,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         Button nextPageBtn = (Button)findViewById(R.id.Category);
-        nextPageBtn.setOnClickListener(this);
+        nextPageBtn.setOnClickListener(changeToCategory());
+
+        Button settingButton = (Button)findViewById(R.id.Setting);
+        settingButton.setOnClickListener(changeToSettings());
     }
 
     @Override
@@ -42,10 +56,25 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent();
-        intent.setClass(MainActivity.this  , category_list.class);
-        startActivity(intent);
+    private View.OnClickListener changeToCategory(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this  , category_list.class);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener changeToSettings(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this  , Settings.class);
+                startActivity(intent);
+            }
+        };
     }
 }

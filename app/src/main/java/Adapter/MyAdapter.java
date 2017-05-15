@@ -89,7 +89,7 @@ public class MyAdapter extends BaseAdapter {
                 dialog.setTitle("新增分類");
                 Button categoryCreate = (Button)dialog.findViewById(R.id.category_create);
                 Button categoryCancel = (Button)dialog.findViewById(R.id.category_cancel);
-                categoryCreate.setText("新增");
+                categoryCreate.setText("123");
                 dialog.show();
                 categoryCreate.setOnClickListener(new View.OnClickListener() {
                     @Override

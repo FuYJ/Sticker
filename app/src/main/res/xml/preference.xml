@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/remind"
+        android:title="是否要提醒" />
+    <ListPreference
+        android:defaultValue="西元曆"
+        android:entries="@array/calendar_options"
+        android:entryValues="@array/calendar_options"
+        android:key="@string/calendars"
+        android:title="選擇曆法" />
+</PreferenceScreen>

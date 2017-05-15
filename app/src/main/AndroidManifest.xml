@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".category_list"></activity>
+        <activity android:name=".Settings"></activity>
     </application>
 
 </manifest>
