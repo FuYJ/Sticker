@@ -57,18 +57,21 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        TextView name;
+        TextView name, description;
         Button createButton, deleteButton, editButton;
         view = inflater.inflate(R.layout.category_item,viewGroup,false);
         name = (TextView) view.findViewById(R.id.category_name);
+        description = (TextView) view.findViewById(R.id.category_description);
         createButton = (Button) view.findViewById(R.id.create);
         deleteButton = (Button) view.findViewById(R.id.delete);
         editButton = (Button) view.findViewById(R.id.edit);
         if(i > 0){
             name.setText(categoryList.get(i - 1).getTitle());
+            description.setText(categoryList.get(i - 1).getDescription());
         }
         createButton.setVisibility(UI_vis[isCreateButtonVisible[i]]);
         name.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
+        description.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         deleteButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
         editButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
         createButton.setOnClickListener(createListener());
