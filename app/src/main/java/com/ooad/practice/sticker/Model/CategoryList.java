@@ -59,17 +59,31 @@ public class CategoryList {
         ContentValues cv = new ContentValues();
         cv.put(Database.CATEGORY_TITLE, category.getTitle());
         cv.put(Database.CATEGORY_DESCRIPTION, category.getDescription());
-        Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"", null);
-        int rowsNum = cursor.getCount();
-        if(rowsNum > 0){
-            return -1;
+
+        if(category.getCategoryID() == 0){
+            Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"", null);
+            int rowsNum = cursor.getCount();
+            if(rowsNum > 0){
+                cursor.close();
+                return -1;
+            }
+            cursor.close();
+
+            db.create(Database.CATEGORY_TABLE, cv);
         }
         else{
-            if(category.getCategoryID() == 0){
-                db.create(Database.CATEGORY_TABLE, cv);
+            Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"", null);
+            int rowsNum = cursor.getCount();
+            if(rowsNum > 0){
+                cursor.moveToFirst();
+                if(cursor.getInt(0) != category.getCategoryID()){
+                    cursor.close();
+                    return -1;
+                }
             }
-            else
-                db.update(Database.CATEGORY_TABLE, Database.CATEGORY_ID + "=" + category.getCategoryID().toString(),cv);
+            cursor.close();
+
+            db.update(Database.CATEGORY_TABLE, Database.CATEGORY_ID + "=" + category.getCategoryID().toString(),cv);
         }
         return 0;
     }
