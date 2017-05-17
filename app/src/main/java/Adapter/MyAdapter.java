@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.ooad.practice.sticker.Bean.Category;
 import com.ooad.practice.sticker.Controller.CategoryHandler;
+import com.ooad.practice.sticker.Model.CategoryList;
 import com.ooad.practice.sticker.R;
 import com.ooad.practice.sticker.category_list;
 
@@ -23,11 +24,11 @@ import java.util.List;
 
 public class MyAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    List<Category> categoryList;
-    int[] isCreateButtonVisible;
-    int[] isEditButtonVisible;
-    int UI_vis[] = {View.GONE,View.VISIBLE};
-    private CategoryHandler handler = new CategoryHandler();
+    private List<Category> categoryList;
+    private int[] isCreateButtonVisible;
+    private int[] isEditButtonVisible;
+    private int UI_vis[] = {View.GONE,View.VISIBLE};
+    private CategoryList category;
     private Context context;
     private Dialog dialog;
 
@@ -37,6 +38,7 @@ public class MyAdapter extends BaseAdapter {
         this.isCreateButtonVisible = isCreateButtonVisible;
         this.isEditButtonVisible = isEditButtonVisible;
         this.context = context;
+        this.category = CategoryList.getInstance();
     }
     @Override
     public int getCount() {
@@ -75,11 +77,6 @@ public class MyAdapter extends BaseAdapter {
         return view;
     }
 
-    private void updateView(){
-        categoryList = handler.getCategoryList(null);
-
-    }
-
     private View.OnClickListener createListener(){
         return new View.OnClickListener() {
             @Override
@@ -89,7 +86,7 @@ public class MyAdapter extends BaseAdapter {
                 dialog.setTitle("新增分類");
                 Button categoryCreate = (Button)dialog.findViewById(R.id.category_create);
                 Button categoryCancel = (Button)dialog.findViewById(R.id.category_cancel);
-                categoryCreate.setText("123");
+                categoryCreate.setText("新增");
                 dialog.show();
                 categoryCreate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -97,10 +94,15 @@ public class MyAdapter extends BaseAdapter {
                         TextView title = (TextView)dialog.findViewById(R.id.category_title_input);
                         TextView description = (TextView)dialog.findViewById(R.id.category_description_input);
                         if(!title.getText().toString().isEmpty()){
-                            handler.addCategory(new Category(0, title.getText().toString(), description.getText().toString()));
-                            dialog.dismiss();
-                            if(context instanceof category_list){
-                                ((category_list)context).updateView();
+                            int number = category.setCategory(new Category(0, title.getText().toString(), description.getText().toString()));
+                            if(number == -1){
+                                Toast.makeText(v.getContext(), "Title已經存在", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                dialog.dismiss();
+                                if(context instanceof category_list){
+                                    ((category_list)context).updateView();
+                                }
                             }
                         }
                         else
@@ -136,10 +138,15 @@ public class MyAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         if(!title.getText().toString().isEmpty()){
-                            handler.editCategory(new Category(categoryList.get(index - 1).getCategoryID(), title.getText().toString(), description.getText().toString()));
-                            dialog.dismiss();
-                            if(context instanceof category_list){
-                                ((category_list)context).updateView();
+                            int number = category.setCategory(new Category(categoryList.get(index - 1).getCategoryID(), title.getText().toString(), description.getText().toString()));
+                            if(number == -1){
+                                Toast.makeText(v.getContext(), "Title已經存在", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                dialog.dismiss();
+                                if(context instanceof category_list){
+                                    ((category_list)context).updateView();
+                                }
                             }
                         }
                         else
@@ -171,7 +178,7 @@ public class MyAdapter extends BaseAdapter {
                 confirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        handler.deleteCategory(categoryList.get(index - 1));
+                        category.deleteCategory(categoryList.get(index - 1));
                         ((category_list)context).updateView();
                         if(context instanceof category_list){
                             ((category_list)context).updateView();
