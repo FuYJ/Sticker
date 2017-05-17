@@ -1,5 +1,6 @@
 package com.ooad.practice.sticker;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 
 import com.ooad.practice.sticker.Bean.*;
 import com.ooad.practice.sticker.Controller.CategoryHandler;
+import com.ooad.practice.sticker.Model.CategoryList;
 
 import java.util.List;
 
@@ -19,8 +21,9 @@ import Adapter.MyAdapter;
 
 public class category_list extends ActionBarActivity {
     private List<Category> categoryList;
-    private CategoryHandler handler = new CategoryHandler();
+    private CategoryList category;
     private ListView listView;
+    private Button settingButton;
     private int isVisible = 0;
     private int[] isCreateButtonVisible;
     private int[] isEditButtonVisible;
@@ -33,24 +36,16 @@ public class category_list extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
 
-        Button settingButton = (Button)findViewById(R.id.setting);
+        settingButton = (Button)findViewById(R.id.setting);
+        settingButton.setOnClickListener(settingsListener());
         searchInput = (EditText)findViewById(R.id.searchInput);
         searchInput.setOnKeyListener(searchInputLinstener());
-//        Toast.makeText(this, searchInput.getText().toString(), Toast.LENGTH_SHORT).show();
+        category = CategoryList.getInstance();
         updateView();
-
-        settingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isVisible = (isVisible + 1) % 2;
-                updateView();
-            }
-        });
-
     }
 
     public void updateView(){
-        categoryList = handler.getCategoryList(null);
+        categoryList = category.getCategoryList(searchKey);
         length = categoryList.size();
         isCreateButtonVisible = new int[length + 1];
         isEditButtonVisible = new int[length + 1];
@@ -76,11 +71,27 @@ public class category_list extends ActionBarActivity {
         });
     }
 
+    private View.OnClickListener settingsListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isVisible = (isVisible + 1) % 2;
+                updateView();
+            }
+        };
+    }
+
     private View.OnKeyListener searchInputLinstener(){
         return new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    Toast.makeText(v.getContext(), "Test", Toast.LENGTH_SHORT);
+                    if(searchInput.getText().toString().equals("")){
+                        searchKey = null;
+                    }
+                    else{
+                        searchKey = searchInput.getText().toString();
+                    }
+                    updateView();
                     return true;
                 }
                 return false;
