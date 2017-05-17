@@ -37,7 +37,7 @@ public class CategoryList {
         if(keyword == null)
             cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_ID + Database.ORDER_ASC);
         else
-            cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " LIKE %" + keyword + "%", Database.CATEGORY_ID + Database.ORDER_ASC);
+            cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"", Database.CATEGORY_ID + Database.ORDER_ASC);
         int rowsNum = cursor.getCount();
         if(rowsNum > 0){
             cursor.moveToFirst();
@@ -59,16 +59,18 @@ public class CategoryList {
         ContentValues cv = new ContentValues();
         cv.put(Database.CATEGORY_TITLE, category.getTitle());
         cv.put(Database.CATEGORY_DESCRIPTION, category.getDescription());
-        if(category.getCategoryID() == 0){
-            Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"", null);
-            int rowsNum = cursor.getCount();
-            if(rowsNum > 0)
-                return -1;
-            else
-                db.create(Database.CATEGORY_TABLE, cv);
+        Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"", null);
+        int rowsNum = cursor.getCount();
+        if(rowsNum > 0){
+            return -1;
         }
-        else
-            db.update(Database.CATEGORY_TABLE, Database.CATEGORY_ID + "=" + category.getCategoryID().toString(),cv);
+        else{
+            if(category.getCategoryID() == 0){
+                db.create(Database.CATEGORY_TABLE, cv);
+            }
+            else
+                db.update(Database.CATEGORY_TABLE, Database.CATEGORY_ID + "=" + category.getCategoryID().toString(),cv);
+        }
         return 0;
     }
 
