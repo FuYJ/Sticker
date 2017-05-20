@@ -68,6 +68,22 @@ public class Database implements IDatabase {
     public static final String ORDER_ASC = " ASC";
     public static final String ORDER_DESC = " DESC";
 
+    public enum OrderBy{
+        ORDER_ASC,
+        ORDER_DESC
+    }
+
+    public enum SearchTarget{
+        STICKER,
+        CATEGORY,
+        TAG
+    }
+
+    public enum SearchIsFinished{
+        UNFINISHED,
+        FINISHED
+    }
+
     private SQLiteDatabase db;
 
     public Database(Context context){

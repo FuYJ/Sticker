@@ -33,10 +33,11 @@ public class StickerList {
         return instance;
     }
 
-    public List<Sticker> getStickerList(String keyword){
+    public List<Sticker> getStickerListByCategoryId(Integer categoryId){
         List<Sticker> result = new ArrayList<>();
+        String where = Database.CATEGORY_ID + " = " + categoryId.toString();
 
-        Cursor cursor = db.retrieve(Database.STICKER_TABLE, Database.STICKER_TITLE + " LIKE %" + keyword + "%", Database.STICKER_DEADLINE);
+        Cursor cursor = db.retrieve(Database.STICKER_TABLE, where, Database.STICKER_ID + " " + Database.ORDER_ASC);
         int rowsNum = cursor.getCount();
         if(rowsNum > 0){
             cursor.moveToFirst();
@@ -57,6 +58,75 @@ public class StickerList {
         return result;
     }
 
+    public List<Sticker> getStickerList(String keyword, List<Database.SearchTarget> searchTarget, Database.SearchIsFinished searchIsFinished){
+        List<Sticker> result = new ArrayList<>();
+        String where = "";
+        addWhereConstraintsAccordingToSearchTarget(where, keyword, searchTarget);
+        addWhereConstraintsAccordingToSearchIsFinished(where, searchIsFinished);
+
+        Cursor cursor = db.retrieve(Database.STICKER_TABLE, where, Database.STICKER_DEADLINE);
+        int rowsNum = cursor.getCount();
+        if(rowsNum > 0){
+            cursor.moveToFirst();
+            for(int i = 0; i < rowsNum; i++){
+                Integer stickerID = cursor.getInt(0);
+                Integer categoryID = cursor.getInt(1);
+                String title = cursor.getString(2);
+                String description = cursor.getString(3);
+                Long deadline = cursor.getLong(4);
+                Long remindTime = cursor.getLong(5);
+                Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
+                Sticker sticker = new Sticker(stickerID, categoryID, title, description, calculateDate(deadline), calculateDate(remindTime), isFinished);
+                result.add(sticker);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return result;
+    }
+
+    private String addWhereConstraintsAccordingToSearchTarget(String where, String keyword, List<Database.SearchTarget> searchTarget){
+        for(Database.SearchTarget st : searchTarget){
+            switch(st){
+                case STICKER:
+                    if(where == "")
+                        where += Database.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
+                    else
+                        where += "AND" + Database.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
+                    break;
+                case CATEGORY:
+                    if(where == "")
+                        where += Database.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
+                    else
+                        where += "AND" + Database.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
+                    break;
+                case TAG:
+                    if(where == "")
+                        where += Database.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
+                    else
+                        where += "AND" + Database.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
+                    break;
+            }
+        }
+        return where;
+    }
+
+    private String addWhereConstraintsAccordingToSearchIsFinished(String where, Database.SearchIsFinished searchIsFinished){
+        if(searchIsFinished == Database.SearchIsFinished.FINISHED){
+            if(where == "")
+                where += Database.STICKER_IS_FINISHED + " = " + String.valueOf(Database.SearchIsFinished.FINISHED.ordinal());
+            else
+                where += "AND" + Database.STICKER_IS_FINISHED + " = " + String.valueOf(Database.SearchIsFinished.FINISHED.ordinal());
+        }
+        else{
+            if(where == "")
+                where += Database.STICKER_IS_FINISHED + " = " + String.valueOf(Database.SearchIsFinished.UNFINISHED.ordinal());
+            else
+                where += "AND" + Database.STICKER_IS_FINISHED + " = " + String.valueOf(Database.SearchIsFinished.UNFINISHED.ordinal());
+        }
+        return where;
+    }
+
     public void setSticker(Sticker sticker){
         ContentValues cv = new ContentValues();
         cv.put(Database.STICKER_CATEGORY_ID, sticker.getCategoryID());
@@ -68,7 +138,7 @@ public class StickerList {
         if(sticker.getStickerID() == 0)
             db.create(Database.STICKER_TABLE, cv);
         else
-            db.update(Database.STICKER_TABLE, Database.STICKER_ID + "=" + sticker.getStickerID().toString(), cv);
+            db.update(Database.STICKER_TABLE, Database.STICKER_ID + " = " + sticker.getStickerID().toString(), cv);
     }
 
     public void deleteSticker(Sticker sticker){
