@@ -25,6 +25,7 @@ public class MainActivity extends ActionBarActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Main");
         setContentView(R.layout.activity_main);
 
         Button nextPageBtn = (Button)findViewById(R.id.Category);

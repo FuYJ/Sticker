@@ -1,7 +1,5 @@
 package com.ooad.practice.sticker;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -12,12 +10,10 @@ import android.view.*;
 import android.widget.AdapterView;
 
 import com.ooad.practice.sticker.Bean.*;
-import com.ooad.practice.sticker.Controller.CategoryHandler;
 import com.ooad.practice.sticker.Model.CategoryList;
+import Adapter.*;
 
 import java.util.List;
-
-import Adapter.MyAdapter;
 
 public class category_list extends ActionBarActivity {
     private List<Category> categoryList;
@@ -34,6 +30,7 @@ public class category_list extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Category List");
         setContentView(R.layout.activity_category_list);
 
         settingButton = (Button)findViewById(R.id.setting);
@@ -62,7 +59,7 @@ public class category_list extends ActionBarActivity {
         }
 
         listView = (ListView)findViewById(R.id.listView);
-        listView.setAdapter(new MyAdapter(category_list.this, categoryList, isCreateButtonVisible, isEditButtonVisible, this));
+        listView.setAdapter(new CategoryAdapter(category_list.this, categoryList, isCreateButtonVisible, isEditButtonVisible, this));
         listView.setOnItemClickListener(new OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id){
