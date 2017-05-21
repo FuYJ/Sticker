@@ -58,12 +58,12 @@ public class category_list extends ActionBarActivity {
             }
         }
 
-        listView = (ListView)findViewById(R.id.listView);
+        listView = (ListView)findViewById(R.id.category_list);
         listView.setAdapter(new CategoryAdapter(category_list.this, categoryList, isCreateButtonVisible, isEditButtonVisible, this));
         listView.setOnItemClickListener(new OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id){
-
+                Toast.makeText(view.getContext(), parent.getCount(), Toast.LENGTH_SHORT).show();
             }
         });
     }
