@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ooad.practice.sticker.Bean.Category;
-import com.ooad.practice.sticker.Controller.CategoryHandler;
 import com.ooad.practice.sticker.Model.CategoryList;
 import com.ooad.practice.sticker.R;
 import com.ooad.practice.sticker.category_list;
@@ -22,7 +21,7 @@ import java.util.List;
  * Created by mousecat1 on 2017/5/5.
  */
 
-public class MyAdapter extends BaseAdapter {
+public class CategoryAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Category> categoryList;
     private int[] isCreateButtonVisible;
@@ -32,7 +31,7 @@ public class MyAdapter extends BaseAdapter {
     private Context context;
     private Dialog dialog;
 
-    public MyAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible, int[] isEditButtonVisible, Context context){
+    public CategoryAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible, int[] isEditButtonVisible, Context context){
         inflater = LayoutInflater.from(c);
         this.categoryList = categoryList;
         this.isCreateButtonVisible = isCreateButtonVisible;
@@ -62,9 +61,9 @@ public class MyAdapter extends BaseAdapter {
         view = inflater.inflate(R.layout.category_item,viewGroup,false);
         name = (TextView) view.findViewById(R.id.category_name);
         description = (TextView) view.findViewById(R.id.category_description);
-        createButton = (Button) view.findViewById(R.id.create);
-        deleteButton = (Button) view.findViewById(R.id.delete);
-        editButton = (Button) view.findViewById(R.id.edit);
+        createButton = (Button) view.findViewById(R.id.create_category);
+        deleteButton = (Button) view.findViewById(R.id.delete_category);
+        editButton = (Button) view.findViewById(R.id.edit_category);
         if(i > 0){
             name.setText(categoryList.get(i - 1).getTitle());
             description.setText(categoryList.get(i - 1).getDescription());

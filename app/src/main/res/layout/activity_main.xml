@@ -1,19 +1,18 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:layout_height="match_parent" tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="435dp"
+            android:layout_height="450dp"
             android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
@@ -24,6 +23,7 @@
                     android:id="@+id/emergentNumber"
                     android:layout_width="40dp"
                     android:layout_height="35dp"
+                    android:layout_marginEnd="76dp"
                     android:layout_marginRight="76dp"
                     android:layout_marginTop="161dp"
                     android:text="0"
@@ -36,8 +36,10 @@
                     android:id="@+id/recentStickers"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="21dp"
                     android:text="@string/recent_stickers"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -48,8 +50,10 @@
                     android:id="@+id/emergentStickers"
                     android:layout_width="160dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginLeft="76dp"
                     android:layout_marginRight="8dp"
+                    android:layout_marginStart="76dp"
                     android:layout_marginTop="161dp"
                     android:text="@string/emergent_stickers"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -96,4 +100,4 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
