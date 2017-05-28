@@ -66,5 +66,6 @@ public class TagList {
 
     public void deleteTag(Tag tag){
         db.delete(Database.TAG_TABLE, tag.getTagID());
+        db.delete(Database.STICKER_TAGS_TABLE, Database.STICKER_TAGS_TAG_ID + " = \"" + tag.getTagID().toString() + "\"");
     }
 }

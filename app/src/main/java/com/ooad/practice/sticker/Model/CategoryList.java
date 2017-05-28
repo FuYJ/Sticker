@@ -23,9 +23,20 @@ public class CategoryList {
         db = new Database(MainApplication.getContext());
     }
 
+    private CategoryList(IDatabase db){
+        this.db = db;
+    }
+
     public static CategoryList getInstance(){
         if(instance == null){
             instance = new CategoryList();
+        }
+        return instance;
+    }
+
+    public static CategoryList getInstance(IDatabase db){
+        if(instance == null){
+            instance = new CategoryList(db);
         }
         return instance;
     }
