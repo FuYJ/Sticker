@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.ooad.practice.sticker.Bean.Sticker;
+import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Database.Database;
 import com.ooad.practice.sticker.Database.IDatabase;
 import com.ooad.practice.sticker.MainApplication;
@@ -49,7 +50,7 @@ public class StickerList {
                 Long deadline = cursor.getLong(4);
                 Long remindTime = cursor.getLong(5);
                 Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
-                Sticker sticker = new Sticker(stickerID, categoryID, title, description, calculateDate(deadline), calculateDate(remindTime), isFinished);
+                Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
                 result.add(sticker);
                 cursor.moveToNext();
             }
@@ -76,7 +77,7 @@ public class StickerList {
                 Long deadline = cursor.getLong(4);
                 Long remindTime = cursor.getLong(5);
                 Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
-                Sticker sticker = new Sticker(stickerID, categoryID, title, description, calculateDate(deadline), calculateDate(remindTime), isFinished);
+                Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
                 result.add(sticker);
                 cursor.moveToNext();
             }
@@ -132,8 +133,8 @@ public class StickerList {
         cv.put(Database.STICKER_CATEGORY_ID, sticker.getCategoryID());
         cv.put(Database.STICKER_TITLE, sticker.getTitle());
         cv.put(Database.STICKER_DESCRIPTION, sticker.getDescription());
-        cv.put(Database.STICKER_DEADLINE, calculateDate(sticker.getDeadline()));
-        cv.put(Database.STICKER_REMIND_TIME, calculateDate(sticker.getRemindTime()));
+        cv.put(Database.STICKER_DEADLINE, sticker.calculateDate(sticker.getDeadline()));
+        cv.put(Database.STICKER_REMIND_TIME, sticker.calculateDate(sticker.getRemindTime()));
         cv.put(Database.STICKER_IS_FINISHED, sticker.getFinished());
         if(sticker.getStickerID() == 0)
             db.create(Database.STICKER_TABLE, cv);
@@ -141,13 +142,52 @@ public class StickerList {
             db.update(Database.STICKER_TABLE, Database.STICKER_ID + " = " + sticker.getStickerID().toString(), cv);
     }
 
+    public void setTagToSticker(Sticker sticker, Tag tag){
+        ContentValues cv = new ContentValues();
+        cv.put(Database.STICKER_TAGS_STICKER_ID, sticker.getStickerID());
+        cv.put(Database.STICKER_TAGS_TAG_ID, tag.getTagID());
+        db.create(Database.STICKER_TAGS_TABLE, cv);
+    }
+
+    public void deleteTagFromSticker(Sticker sticker, Tag tag){
+        ContentValues cv = new ContentValues();
+        cv.put(Database.STICKER_TAGS_STICKER_ID, sticker.getStickerID());
+        cv.put(Database.STICKER_TAGS_TAG_ID, tag.getTagID());
+        String where = Database.STICKER_TAGS_STICKER_ID + " = \"" + sticker.getStickerID().toString() + "\" AND"
+                + Database.STICKER_TAGS_TAG_ID + " = \"" + tag.getTagID().toString() + "\"";
+        Cursor cursor = db.retrieve(Database.STICKER_TAGS_TABLE, where, Database.STICKER_ID + Database.ORDER_ASC);
+        int count = cursor.getCount();
+        if(count > 0){
+            db.delete(Database.STICKER_TAGS_TABLE, where);
+        }
+    }
+
     public void deleteSticker(Sticker sticker){
         db.delete(Database.STICKER_TABLE, sticker.getStickerID());
     }
 
     public List<Sticker> getEmergentList(){
-        ArrayList<Sticker> result = new ArrayList<>();
+        List<Sticker> result = new ArrayList<>();
+        String where = Database.STICKER_REMIND_TIME + " < " + System.currentTimeMillis();
 
+        Cursor cursor = db.retrieve(Database.STICKER_TABLE, where, Database.STICKER_DEADLINE);
+        int rowsNum = cursor.getCount();
+        if(rowsNum > 0){
+            cursor.moveToFirst();
+            for(int i = 0; i < rowsNum; i++){
+                Integer stickerID = cursor.getInt(0);
+                Integer categoryID = cursor.getInt(1);
+                String title = cursor.getString(2);
+                String description = cursor.getString(3);
+                Long deadline = cursor.getLong(4);
+                Long remindTime = cursor.getLong(5);
+                Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
+                Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
+                result.add(sticker);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
         return result;
     }
 
@@ -155,23 +195,5 @@ public class StickerList {
         ArrayList<Sticker> result = new ArrayList<>();
 
         return result;
-    }
-
-    public String calculateDate(Long date){
-        String formattedDate;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        formattedDate = sdf.format(date);
-        return formattedDate;
-    }
-
-    public Long calculateDate(String date){
-        Long dateTime = 0L;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-        try {
-            dateTime = sdf.parse(date).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return dateTime;
     }
 }
