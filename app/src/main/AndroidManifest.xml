@@ -24,6 +24,7 @@
         <activity
             android:name=".sticker_list"
             android:label="@string/title_activity_sticker_list"></activity>
+        <activity android:name=".sticker_page" />
     </application>
 
 </manifest>
