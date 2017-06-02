@@ -3,6 +3,7 @@ package Adapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,20 +30,23 @@ import java.util.List;
 
 public class StickerAdapter extends BaseAdapter {
     private LayoutInflater inflater;
+    private Dialog dialog;
     private List<Sticker> stickerList;
     private int[] isCreateButtonVisible;
     private int[] isEditButtonVisible;
     private Context context;
     private StickerList sticker;
+    private Category category;
     private int UI_vis[] = {View.GONE,View.VISIBLE};
 
-    public StickerAdapter(Context c, List<Sticker> stickerList, int[] isCreateButtonVisible, int[] isEditButtonVisible){
+    public StickerAdapter(Context c, List<Sticker> stickerList, int[] isCreateButtonVisible, int[] isEditButtonVisible, Category category){
         inflater = LayoutInflater.from(c);
         this.stickerList = stickerList;
         this.isCreateButtonVisible = isCreateButtonVisible;
         this.isEditButtonVisible = isEditButtonVisible;
         this.context = c;
         this.sticker = StickerList.getInstance();
+        this.category = category;
     }
 
     @Override
@@ -77,12 +81,14 @@ public class StickerAdapter extends BaseAdapter {
             description.setText(stickerList.get(i - 1).getDeadline());
         }
         createButton.setVisibility(UI_vis[isCreateButtonVisible[i]]);
+        createButton.setOnClickListener(createListener());
         title.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         description.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         tags.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         deleteButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
+        deleteButton.setOnClickListener(deleteListener(i));
         editButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
-        createButton.setOnClickListener(createListener());
+        editButton.setOnClickListener(editListener(i));
         return view;
     }
 
@@ -91,7 +97,60 @@ public class StickerAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, sticker_page.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Category", category);
+                bundle.putSerializable("Sticker", null);
+                bundle.putString("State", context.getResources().getStringArray(R.array.sticker_state)[0]);
+                intent.putExtra("Bundle", bundle);
                 context.startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener editListener(final int position){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, sticker_page.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Category", category);
+                bundle.putSerializable("Sticker", stickerList.get(position - 1));
+                bundle.putString("State", context.getResources().getStringArray(R.array.sticker_state)[1]);
+                intent.putExtra("Bundle", bundle);
+                context.startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener deleteListener(final int position){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog(v.getContext());
+                dialog.setContentView(R.layout.popup_reconfirmation);
+                dialog.setTitle("確認");
+                TextView text = (TextView)dialog.findViewById(R.id.reconfirm_text);
+                Button confirm = (Button)dialog.findViewById(R.id.confirm);
+                Button concel = (Button)dialog.findViewById(R.id.concel);
+                text.setText("確定要刪除嗎?");
+                dialog.show();
+                confirm.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        sticker.deleteSticker(stickerList.get(position - 1));
+                        ((sticker_list)context).update();
+                        if(context instanceof category_list){
+                            ((category_list)context).updateView();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                concel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         };
     }

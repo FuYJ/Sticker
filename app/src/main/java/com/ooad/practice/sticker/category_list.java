@@ -39,7 +39,14 @@ public class category_list extends ActionBarActivity {
         searchInput = (EditText)findViewById(R.id.searchInput);
         searchInput.setOnKeyListener(searchInputLinstener());
         category = CategoryList.getInstance();
+
         updateView();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+
     }
 
     public void updateView(){
