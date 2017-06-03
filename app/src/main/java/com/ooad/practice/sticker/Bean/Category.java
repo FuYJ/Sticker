@@ -10,7 +10,6 @@ public class Category {
     private Integer categoryID;
     private String title;
     private String description;
-    private List<Integer> stickerList;
 
     public Category(Integer categoryID, String title, String description){
         this.categoryID = categoryID;
@@ -40,13 +39,5 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Integer> getStickerList() {
-        return stickerList;
-    }
-
-    public void setStickerList(List<Integer> stickerList) {
-        this.stickerList = stickerList;
     }
 }
