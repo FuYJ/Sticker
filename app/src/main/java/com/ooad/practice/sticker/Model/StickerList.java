@@ -36,7 +36,7 @@ public class StickerList {
 
     public List<Sticker> getStickerListByCategoryId(Integer categoryId){
         List<Sticker> result = new ArrayList<>();
-        String where = Database.CATEGORY_ID + " = " + categoryId.toString();
+        String where = Database.STICKER_CATEGORY_ID + " = " + categoryId.toString();
 
         Cursor cursor = db.retrieve(Database.STICKER_TABLE, where, Database.STICKER_ID + " " + Database.ORDER_ASC);
         int rowsNum = cursor.getCount();

@@ -82,14 +82,14 @@ public class Sticker implements Serializable {
 
     public String calculateDate(Long date){
         String formattedDate;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         formattedDate = sdf.format(date);
         return formattedDate;
     }
 
     public Long calculateDate(String date){
         Long dateTime = 0L;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         try {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());
             Calendar calendar = Calendar.getInstance();
