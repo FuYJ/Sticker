@@ -1,5 +1,6 @@
 package com.ooad.practice.sticker;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -38,7 +39,14 @@ public class category_list extends ActionBarActivity {
         searchInput = (EditText)findViewById(R.id.searchInput);
         searchInput.setOnKeyListener(searchInputLinstener());
         category = CategoryList.getInstance();
+
         updateView();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+
     }
 
     public void updateView(){
@@ -59,13 +67,8 @@ public class category_list extends ActionBarActivity {
         }
 
         listView = (ListView)findViewById(R.id.category_list);
-        listView.setAdapter(new CategoryAdapter(category_list.this, categoryList, isCreateButtonVisible, isEditButtonVisible, this));
-        listView.setOnItemClickListener(new OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView parent, View view, int position, long id){
-                Toast.makeText(view.getContext(), parent.getCount(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        listView.setAdapter(new CategoryAdapter(category_list.this, categoryList, isCreateButtonVisible, isEditButtonVisible));
+        listView.setOnItemClickListener(listItemListener());
     }
 
     private View.OnClickListener settingsListener(){
@@ -92,6 +95,21 @@ public class category_list extends ActionBarActivity {
                     return true;
                 }
                 return false;
+            }
+        };
+    }
+
+    private OnItemClickListener listItemListener(){
+        return new OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView parent, View view, int position, long id){
+                if(position > 0){
+                    Intent intent = new Intent(category_list.this, sticker_list.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Category", categoryList.get(position - 1));
+                    intent.putExtra("Bundle", bundle);
+                    startActivity(intent);
+                }
             }
         };
     }

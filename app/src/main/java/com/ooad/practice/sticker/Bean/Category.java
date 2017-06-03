@@ -1,12 +1,14 @@
 package com.ooad.practice.sticker.Bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by fuyiru on 2017/5/4.
  */
 
-public class Category {
+public class Category implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Integer categoryID;
     private String title;
     private String description;

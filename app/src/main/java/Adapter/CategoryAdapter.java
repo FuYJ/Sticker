@@ -31,12 +31,12 @@ public class CategoryAdapter extends BaseAdapter {
     private Context context;
     private Dialog dialog;
 
-    public CategoryAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible, int[] isEditButtonVisible, Context context){
+    public CategoryAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible, int[] isEditButtonVisible){
         inflater = LayoutInflater.from(c);
         this.categoryList = categoryList;
         this.isCreateButtonVisible = isCreateButtonVisible;
         this.isEditButtonVisible = isEditButtonVisible;
-        this.context = context;
+        this.context = c;
         this.category = CategoryList.getInstance();
     }
     @Override

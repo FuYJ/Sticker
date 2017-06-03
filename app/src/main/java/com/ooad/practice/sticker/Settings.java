@@ -46,8 +46,6 @@ public class Settings extends PreferenceActivity {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if(key.equals(notificationKey)){
-                Log.v("System setting", "notification changed");
-                Log.v("Notification value", String.valueOf(sharedPreferences.getBoolean(key, true)));
                 switchNotification(sharedPreferences.getBoolean(key, true));
             }
         }

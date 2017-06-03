@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import com.ooad.practice.sticker.MainActivity;
 import com.ooad.practice.sticker.MainApplication;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,7 +17,8 @@ import java.util.List;
  * Created by fuyiru on 2017/5/4.
  */
 
-public class Sticker {
+public class Sticker implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Integer stickerID;
     private Integer categoryID;
     private String title;

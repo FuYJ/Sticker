@@ -20,4 +20,10 @@
         <item>農曆</item>
     </string-array>
     <string name="title_activity_sticker_list">sticker_list</string>
+
+    <string-array name="sticker_state">
+        <item>CREATE</item>
+        <item>MODIFY</item>
+        <item>VIEW</item>
+    </string-array>
 </resources>
