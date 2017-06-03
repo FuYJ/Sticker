@@ -129,7 +129,6 @@ public class sticker_page extends ActionBarActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 category = categoryList.get(position);
-//                Toast.makeText(view.getContext(), position, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -148,6 +147,8 @@ public class sticker_page extends ActionBarActivity {
                 }
                 else if(table[1].equals(state)){
                     modifySticker();
+                    state = getApplicationContext().getResources().getStringArray(R.array.sticker_state)[2];
+                    updateView();
                 }
                 else if(table[2].equals(state)){
                     state = getApplicationContext().getResources().getStringArray(R.array.sticker_state)[1];
@@ -184,10 +185,10 @@ public class sticker_page extends ActionBarActivity {
     }
 
     private void modifySticker(){
-        Sticker temp = new Sticker(sticker.getStickerID(), category.getCategoryID(), title.getText().toString(),
-                description.getText().toString(), Long.parseLong(deadline.getText().toString()),
-                Long.parseLong(remind.getText().toString()), isFinished.isChecked());
-        stickerList.setSticker(temp);
+        sticker = new Sticker(sticker.getStickerID(), category.getCategoryID(), title.getText().toString(),
+                description.getText().toString(), deadline.getText().toString(),
+                remind.getText().toString(), isFinished.isChecked());
+        stickerList.setSticker(sticker);
     }
 
     private void deleteSticker(){
