@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.ooad.practice.sticker.Bean.Category;
 import com.ooad.practice.sticker.Bean.Sticker;
+import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Model.CategoryList;
 import com.ooad.practice.sticker.Model.StickerList;
 
@@ -41,13 +42,13 @@ public class sticker_page extends ActionBarActivity {
     private TextView deadline;
     private TextView remind;
     private CheckBox isFinished;
-    private TableRow tags;
     private Button left;
     private Button right;
     private String state;
     private Sticker sticker;
     private Category category;
     private Dialog dialog;
+    private TextView[] tags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +66,11 @@ public class sticker_page extends ActionBarActivity {
         deadline = (TextView)findViewById(R.id.stickerDeadline_input);
         remind = (TextView)findViewById(R.id.stickerRemind_input);
         isFinished = (CheckBox)findViewById(R.id.finished_check);
-        tags = (TableRow)findViewById(R.id.stickerTagRow);
         left = (Button)findViewById(R.id.leftButton);
         left.setOnClickListener(leftButtonListener());
         right = (Button)findViewById(R.id.rightButton);
         right.setOnClickListener(rightButtonListener());
+        handleTags();
         updateView();
     }
 
@@ -109,6 +110,19 @@ public class sticker_page extends ActionBarActivity {
         categories.setSelection(selectedIndex);
     }
 
+    private void handleTags(){
+        tags = new TextView[8];
+        String headString = "stickerTags";
+        String temp;
+        List<Integer> tagList = sticker.getTagList();
+        for (int i = 0; i < 2; i++) {
+            temp = headString + i;
+            tags[i] = (TextView) findViewById(this.getResources().getIdentifier(temp, "id", getPackageName()));
+            tags[i].setBackgroundColor(0xFFFF0000);
+            tags[i].setOnClickListener(tagListener());
+        }
+    }
+
     private void setUIEnable(boolean setValue){
         categories.setEnabled(setValue);
         title.setEnabled(setValue);
@@ -122,6 +136,15 @@ public class sticker_page extends ActionBarActivity {
         description.setText(sticker.getDescription());
         deadline.setText(sticker.getDeadline());
         remind.setText(sticker.getRemindTime());
+    }
+
+    private View.OnClickListener tagListener(){
+        return new View.OnClickListener() {
+            public void onClick(View v) {
+                // do something here.
+                Toast.makeText(v.getContext(), "Test", Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     private AdapterView.OnItemSelectedListener spinnerSelectedItem(){
