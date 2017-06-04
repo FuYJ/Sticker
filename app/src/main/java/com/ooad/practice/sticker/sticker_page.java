@@ -185,8 +185,8 @@ public class sticker_page extends ActionBarActivity {
 
     private void modifySticker(){
         Sticker temp = new Sticker(sticker.getStickerID(), category.getCategoryID(), title.getText().toString(),
-                description.getText().toString(), Long.parseLong(deadline.getText().toString()),
-                Long.parseLong(remind.getText().toString()), isFinished.isChecked());
+                description.getText().toString(), deadline.getText().toString(),
+                remind.getText().toString(), isFinished.isChecked());
         stickerList.setSticker(temp);
     }
 

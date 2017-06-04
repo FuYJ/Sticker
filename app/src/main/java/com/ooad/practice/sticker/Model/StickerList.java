@@ -51,6 +51,8 @@ public class StickerList {
                 Long remindTime = cursor.getLong(5);
                 Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
                 Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
+                List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
+                sticker.setTagList(tagList);
                 result.add(sticker);
                 cursor.moveToNext();
             }
@@ -78,6 +80,8 @@ public class StickerList {
                 Long remindTime = cursor.getLong(5);
                 Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
                 Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
+                List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
+                sticker.setTagList(tagList);
                 result.add(sticker);
                 cursor.moveToNext();
             }
@@ -183,6 +187,8 @@ public class StickerList {
                 Long remindTime = cursor.getLong(5);
                 Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
                 Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
+                List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
+                sticker.setTagList(tagList);
                 result.add(sticker);
                 cursor.moveToNext();
             }

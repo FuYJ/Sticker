@@ -25,7 +25,7 @@ public class Sticker implements Serializable {
     private String description;
     private String deadline;
     private String remindTime;
-    private List<Integer> tagList;
+    private List<Tag> tagList;
     private Boolean isFinished;
 
     public Sticker(Integer stickerID, Integer categoryID, String title, String description, Long deadline, Long remindTime, Boolean isFinished){
@@ -64,8 +64,12 @@ public class Sticker implements Serializable {
         return deadline;
     }
 
-    public List<Integer> getTagList() {
+    public List<Tag> getTagList() {
         return tagList;
+    }
+
+    public void setTagList(List<Tag> tagList){
+        this.tagList = tagList;
     }
 
     public String getDescription() {

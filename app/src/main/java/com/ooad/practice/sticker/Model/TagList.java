@@ -30,6 +30,28 @@ public class TagList {
         return instance;
     }
 
+    public List<Tag> getTagListByStickerId(Integer stickerId){
+        List<Tag> result = new ArrayList<>();
+        String where = Database.STICKER_TAGS_STICKER_ID  + " = " + stickerId.toString();
+        Cursor cursor = db.retrieve(Database.TAG_TABLE, where, Database.TAG_ID + Database.ORDER_ASC);
+        int rowsNum = cursor.getCount();
+        if(rowsNum > 0){
+            cursor.moveToFirst();
+            for(int i = 0; i < rowsNum; i++){
+                Integer tagID = cursor.getInt(0);
+                String tagTitle = cursor.getString(1);
+                Integer tagColorR = cursor.getInt(2);
+                Integer tagColorG = cursor.getInt(3);
+                Integer tagColorB = cursor.getInt(4);
+                Tag tag = new Tag(tagID, tagTitle, tagColorR, tagColorG, tagColorB);
+                result.add(tag);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+        return result;
+    }
+
     public List<Tag> getTagList(){
         List<Tag> result = new ArrayList<>();
         Cursor cursor = db.retrieve(Database.TAG_TABLE, Database.TAG_ID + Database.ORDER_ASC);
