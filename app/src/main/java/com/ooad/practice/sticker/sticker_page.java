@@ -114,7 +114,7 @@ public class sticker_page extends ActionBarActivity {
         tags = new TextView[8];
         String headString = "stickerTags";
         String temp;
-        List<Integer> tagList = sticker.getTagList();
+        List<Tag> tagList = sticker.getTagList();
         for (int i = 0; i < 2; i++) {
             temp = headString + i;
             tags[i] = (TextView) findViewById(this.getResources().getIdentifier(temp, "id", getPackageName()));
