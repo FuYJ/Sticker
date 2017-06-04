@@ -53,7 +53,6 @@ public class sticker_list extends ActionBarActivity {
     }
 
     public void update(){
-        Toast.makeText(this, category.getTitle(), Toast.LENGTH_SHORT).show();
         stickerList = sticker.getStickerListByCategoryId(category.getCategoryID());
         length = stickerList.size();
         isCreateButtonVisible = new int[length + 1];
