@@ -33,22 +33,25 @@ public class TagList {
     public List<Tag> getTagListByStickerId(Integer stickerId){
         List<Tag> result = new ArrayList<>();
         String where = Database.STICKER_TAGS_STICKER_ID  + " = " + stickerId.toString();
-        Cursor cursor = db.retrieve(Database.TAG_TABLE, where, Database.TAG_ID + Database.ORDER_ASC);
+        Cursor cursor = db.retrieve(Database.STICKER_TAGS_TABLE, where, Database.STICKER_TAGS_TAG_ID + Database.ORDER_ASC);
         int rowsNum = cursor.getCount();
         if(rowsNum > 0){
             cursor.moveToFirst();
             for(int i = 0; i < rowsNum; i++){
-                Integer tagID = cursor.getInt(0);
-                String tagTitle = cursor.getString(1);
-                Integer tagColorR = cursor.getInt(2);
-                Integer tagColorG = cursor.getInt(3);
-                Integer tagColorB = cursor.getInt(4);
+                Cursor tagCursor = db.retrieve(Database.TAG_TABLE, cursor.getInt(0));
+                tagCursor.moveToFirst();
+                Integer tagID = tagCursor.getInt(0);
+                String tagTitle = tagCursor.getString(1);
+                Integer tagColorR = tagCursor.getInt(2);
+                Integer tagColorG = tagCursor.getInt(3);
+                Integer tagColorB = tagCursor.getInt(4);
                 Tag tag = new Tag(tagID, tagTitle, tagColorR, tagColorG, tagColorB);
                 result.add(tag);
+                tagCursor.close();
                 cursor.moveToNext();
             }
-            cursor.close();
         }
+        cursor.close();
         return result;
     }
 
