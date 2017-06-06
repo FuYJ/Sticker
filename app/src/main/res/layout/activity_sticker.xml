@@ -116,21 +116,23 @@
     <TableRow
         android:id="@+id/stickerTagRow"
         android:layout_width="match_parent"
-        android:layout_height="50dp" >
+        android:layout_height="50dp">
 
         <TextView
             android:id="@+id/stickerTags0"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:clickable="true" />
+            android:clickable="true"
+            android:text="1" />
 
         <TextView
             android:id="@+id/stickerTags1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:clickable="true" />
+            android:clickable="true"
+            android:text="2" />
 
         <TextView
             android:id="@+id/stickerTags2"

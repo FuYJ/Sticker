@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ import com.ooad.practice.sticker.Model.CategoryList;
 import com.ooad.practice.sticker.Model.StickerList;
 
 import java.util.List;
+
+import ColorPickerDialog.ColorPickerDialog;
 
 /**
  * Created by mousecat1 on 2017/5/31.
@@ -141,8 +144,36 @@ public class sticker_page extends ActionBarActivity {
     private View.OnClickListener tagListener(){
         return new View.OnClickListener() {
             public void onClick(View v) {
-                // do something here.
-                Toast.makeText(v.getContext(), "Test", Toast.LENGTH_SHORT).show();
+                final TextView t = (TextView)findViewById(v.getId());
+                showTagDialog(t);
+            }
+        };
+    }
+
+    private void showTagDialog(TextView text){
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.popup_tag);
+        dialog.setTitle("Tags");
+        TextView color = (TextView)findViewById(R.id.tagColor_inpput);
+        TextView title = (TextView)findViewById(R.id.tagTitle_input);
+        ListView tagList = (ListView)findViewById(R.id.tagList);
+        color.setOnClickListener(colorListener());
+        dialog.show();
+    }
+
+    private View.OnClickListener colorListener(){
+        return new View.OnClickListener() {
+            public void onClick(View v) {
+                Dialog d;
+                final TextView text = (TextView)findViewById(v.getId());
+                d = new ColorPickerDialog(v.getContext(), 0xFFFF0000, "11",
+                        new ColorPickerDialog.OnColorChangedListener() {
+                            public void colorChanged(int color2)
+                            {
+                                text.setBackgroundColor(color2);
+                            }
+                        });
+                d.show();
             }
         };
     }
