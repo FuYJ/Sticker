@@ -1,12 +1,21 @@
 package com.ooad.practice.sticker.Model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Database.Database;
+import com.ooad.practice.sticker.Database.IDataAccessObject;
 import com.ooad.practice.sticker.Database.IDatabase;
+import com.ooad.practice.sticker.Database.StickerTagsAccessObject;
+import com.ooad.practice.sticker.Database.TagAccessObject;
 import com.ooad.practice.sticker.MainApplication;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +26,14 @@ import java.util.List;
 
 public class TagList {
     private static TagList instance;
-    private IDatabase db;
+    //private IDatabase db;
+    private IDataAccessObject tagDAO;
+    private IDataAccessObject stickerTagsDAO;
 
     private TagList() {
-        db = new Database(MainApplication.getContext());
+        Context context = MainApplication.getContext();
+        tagDAO = new TagAccessObject(context);
+        stickerTagsDAO = new StickerTagsAccessObject(context);
     }
 
     public static TagList getInstance(){
@@ -32,65 +45,49 @@ public class TagList {
 
     public List<Tag> getTagListByStickerId(Integer stickerId){
         List<Tag> result = new ArrayList<>();
-        String where = Database.STICKER_TAGS_STICKER_ID  + " = " + stickerId.toString();
-        Cursor cursor = db.retrieve(Database.STICKER_TAGS_TABLE, where, Database.STICKER_TAGS_TAG_ID + Database.ORDER_ASC);
-        int rowsNum = cursor.getCount();
-        if(rowsNum > 0){
-            cursor.moveToFirst();
-            for(int i = 0; i < rowsNum; i++){
-                Cursor tagCursor = db.retrieve(Database.TAG_TABLE, cursor.getInt(0));
-                tagCursor.moveToFirst();
-                Integer tagID = tagCursor.getInt(0);
-                String tagTitle = tagCursor.getString(1);
-                Integer tagColorR = tagCursor.getInt(2);
-                Integer tagColorG = tagCursor.getInt(3);
-                Integer tagColorB = tagCursor.getInt(4);
-                Tag tag = new Tag(tagID, tagTitle, tagColorR, tagColorG, tagColorB);
+        String where = IDataAccessObject.STICKER_TAGS_STICKER_ID  + " = " + stickerId.toString();
+        JSONArray jArr = stickerTagsDAO.retrieveWhere(where);
+        try{
+            for(int i = 0; i < jArr.length(); i++){
+                Integer tagID = jArr.getJSONObject(i).getInt(IDataAccessObject.STICKER_TAGS_TAG_ID);
+                JSONObject jObj = tagDAO.retrieveOne(tagID);
+                Tag tag = new Tag(jObj);
                 result.add(tag);
-                tagCursor.close();
-                cursor.moveToNext();
             }
         }
-        cursor.close();
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
+        }
         return result;
     }
 
     public List<Tag> getTagList(){
         List<Tag> result = new ArrayList<>();
-        Cursor cursor = db.retrieve(Database.TAG_TABLE, Database.TAG_ID + Database.ORDER_ASC);
-        int rowsNum = cursor.getCount();
-        if(rowsNum > 0){
-            cursor.moveToFirst();
-            for(int i = 0; i < rowsNum; i++){
-                Integer tagID = cursor.getInt(0);
-                String tagTitle = cursor.getString(1);
-                Integer tagColorR = cursor.getInt(2);
-                Integer tagColorG = cursor.getInt(3);
-                Integer tagColorB = cursor.getInt(4);
-                Tag tag = new Tag(tagID, tagTitle, tagColorR, tagColorG, tagColorB);
+        JSONArray jArr = tagDAO.retrieveAll();
+        try{
+            for(int i = 0; i < jArr.length(); i++){
+                JSONObject jObj = jArr.getJSONObject(i);
+                Tag tag = new Tag(jObj);
                 result.add(tag);
-                cursor.moveToNext();
             }
-            cursor.close();
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
         }
         return result;
     }
 
     public void setTag(Tag tag){
-        ContentValues cv = new ContentValues();
-        cv.put(Database.TAG_ID, tag.getTagID());
-        cv.put(Database.TAG_TITLE, tag.getTitle());
-        cv.put(Database.TAG_COLOR_R, tag.getColor().get(0));
-        cv.put(Database.TAG_COLOR_G, tag.getColor().get(1));
-        cv.put(Database.TAG_COLOR_B, tag.getColor().get(2));
+        JSONObject jObj = tag.toJSONObject();
         if(tag.getTagID() == 0)
-            db.create(Database.TAG_TABLE, cv);
+            tagDAO.create(jObj);
         else
-            db.update(Database.TAG_TABLE, tag.getTagID().toString() + " = " + Database.TAG_ID, cv);
+            tagDAO.updateOne(tag.getTagID(), jObj);
     }
 
     public void deleteTag(Tag tag){
-        db.delete(Database.TAG_TABLE, tag.getTagID());
-        db.delete(Database.STICKER_TAGS_TABLE, Database.STICKER_TAGS_TAG_ID + " = \"" + tag.getTagID().toString() + "\"");
+        String where = IDataAccessObject.STICKER_TAGS_TAG_ID + " = \"" + tag.getTagID().toString() + "\"";
+        tagDAO.deleteOne(tag.getTagID());
+        stickerTagsDAO.deleteWhere(where);
     }
 }

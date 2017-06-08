@@ -1,5 +1,12 @@
 package com.ooad.practice.sticker.Bean;
 
+import android.util.Log;
+
+import com.ooad.practice.sticker.Database.IDataAccessObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +24,31 @@ public class Category implements Serializable {
         this.categoryID = categoryID;
         this.title = title;
         this.description = description;
+    }
+
+    public Category(JSONObject jObj){
+        try {
+            this.categoryID = jObj.getInt(IDataAccessObject.CATEGORY_ID);
+            this.title = jObj.getString(IDataAccessObject.CATEGORY_TITLE);
+            this.description = jObj.getString(IDataAccessObject.CATEGORY_DESCRIPTION);
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
+        }
+    }
+
+    public JSONObject toJSONObject(){
+        JSONObject jObj = new JSONObject();
+        try{
+            jObj.put(IDataAccessObject.CATEGORY_ID, this.categoryID);
+            jObj.put(IDataAccessObject.CATEGORY_TITLE, this.title);
+            jObj.put(IDataAccessObject.CATEGORY_DESCRIPTION, this.description);
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
+            return null;
+        }
+        return jObj;
     }
 
     public Integer getCategoryID() {

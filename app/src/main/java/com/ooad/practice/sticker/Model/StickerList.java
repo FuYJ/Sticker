@@ -1,18 +1,23 @@
 package com.ooad.practice.sticker.Model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.ooad.practice.sticker.Bean.Sticker;
 import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Database.Database;
-import com.ooad.practice.sticker.Database.IDatabase;
+import com.ooad.practice.sticker.Database.IDataAccessObject;
+import com.ooad.practice.sticker.Database.StickerAccessObject;
+import com.ooad.practice.sticker.Database.StickerTagsAccessObject;
 import com.ooad.practice.sticker.MainApplication;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,10 +26,13 @@ import java.util.List;
 
 public class StickerList {
     private static StickerList instance;
-    private IDatabase db;
+    private IDataAccessObject stickerDAO;
+    private IDataAccessObject stickerTagsDAO;
 
     private StickerList(){
-        db = new Database(MainApplication.getContext());
+        Context context = MainApplication.getContext();
+        stickerDAO = new StickerAccessObject(context);
+        stickerTagsDAO = new StickerTagsAccessObject(context);
     }
 
     public static StickerList getInstance(){
@@ -36,27 +44,19 @@ public class StickerList {
 
     public List<Sticker> getStickerListByCategoryId(Integer categoryId){
         List<Sticker> result = new ArrayList<>();
-        String where = Database.STICKER_CATEGORY_ID + " = " + categoryId.toString();
-
-        Cursor cursor = db.retrieve(Database.STICKER_TABLE, where, Database.STICKER_ID + " " + Database.ORDER_ASC);
-        int rowsNum = cursor.getCount();
-        if(rowsNum > 0){
-            cursor.moveToFirst();
-            for(int i = 0; i < rowsNum; i++){
-                Integer stickerID = cursor.getInt(0);
-                Integer categoryID = cursor.getInt(1);
-                String title = cursor.getString(2);
-                String description = cursor.getString(3);
-                Long deadline = cursor.getLong(4);
-                Long remindTime = cursor.getLong(5);
-                Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
-                Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
+        String where = IDataAccessObject.STICKER_CATEGORY_ID + " = " + categoryId.toString();
+        JSONArray jArr = stickerDAO.retrieveWhere(where);
+        for(int i = 0; i < jArr.length(); i++){
+            try {
+                JSONObject jObj = jArr.getJSONObject(i);
+                Sticker sticker = new Sticker(jObj);
                 List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
                 sticker.setTagList(tagList);
                 result.add(sticker);
-                cursor.moveToNext();
             }
-            cursor.close();
+            catch (JSONException e){
+                Log.e(this.getClass().toString(), "Error when parsing JSONArray");
+            }
         }
         return result;
     }
@@ -64,28 +64,20 @@ public class StickerList {
     public List<Sticker> getStickerList(String keyword, List<Database.SearchTarget> searchTarget, Database.SearchIsFinished searchIsFinished){
         List<Sticker> result = new ArrayList<>();
         String where = "";
-        addWhereConstraintsAccordingToSearchTarget(where, keyword, searchTarget);
-        addWhereConstraintsAccordingToSearchIsFinished(where, searchIsFinished);
-
-        Cursor cursor = db.retrieve(Database.STICKER_TABLE, where, Database.STICKER_DEADLINE);
-        int rowsNum = cursor.getCount();
-        if(rowsNum > 0){
-            cursor.moveToFirst();
-            for(int i = 0; i < rowsNum; i++){
-                Integer stickerID = cursor.getInt(0);
-                Integer categoryID = cursor.getInt(1);
-                String title = cursor.getString(2);
-                String description = cursor.getString(3);
-                Long deadline = cursor.getLong(4);
-                Long remindTime = cursor.getLong(5);
-                Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
-                Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
+        where = addWhereConstraintsAccordingToSearchTarget(where, keyword, searchTarget);
+        where = addWhereConstraintsAccordingToSearchIsFinished(where, searchIsFinished);
+        JSONArray jArr = stickerDAO.retrieveWhere(where);
+        for(int i = 0; i < jArr.length(); i++){
+            try {
+                JSONObject jObj = jArr.getJSONObject(i);
+                Sticker sticker = new Sticker(jObj);
                 List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
                 sticker.setTagList(tagList);
                 result.add(sticker);
-                cursor.moveToNext();
             }
-            cursor.close();
+            catch (JSONException e){
+                Log.e(this.getClass().toString(), "Error when parsing JSONArray");
+            }
         }
         return result;
     }
@@ -133,66 +125,54 @@ public class StickerList {
     }
 
     public void setSticker(Sticker sticker){
-        ContentValues cv = new ContentValues();
-        cv.put(Database.STICKER_CATEGORY_ID, sticker.getCategoryID());
-        cv.put(Database.STICKER_TITLE, sticker.getTitle());
-        cv.put(Database.STICKER_DESCRIPTION, sticker.getDescription());
-        cv.put(Database.STICKER_DEADLINE, sticker.calculateDate(sticker.getDeadline()));
-        cv.put(Database.STICKER_REMIND_TIME, sticker.calculateDate(sticker.getRemindTime()));
-        cv.put(Database.STICKER_IS_FINISHED, sticker.getFinished());
+        JSONObject jObj = sticker.toJSONObject();
         if(sticker.getStickerID() == 0)
-            db.create(Database.STICKER_TABLE, cv);
+            stickerDAO.create(jObj);
         else
-            db.update(Database.STICKER_TABLE, Database.STICKER_ID + " = " + sticker.getStickerID().toString(), cv);
+            stickerDAO.updateOne(sticker.getCategoryID(), jObj);
     }
 
     public void setTagToSticker(Sticker sticker, Tag tag){
-        ContentValues cv = new ContentValues();
-        cv.put(Database.STICKER_TAGS_STICKER_ID, sticker.getStickerID());
-        cv.put(Database.STICKER_TAGS_TAG_ID, tag.getTagID());
-        db.create(Database.STICKER_TAGS_TABLE, cv);
+        JSONObject jObj = new JSONObject();
+        try{
+            jObj.put("\"" + IDataAccessObject.STICKER_TAGS_STICKER_ID + "\"", sticker.getStickerID());
+            jObj.put("\"" + IDataAccessObject.STICKER_TAGS_TAG_ID + "\"", tag.getTagID());
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
+        }
+        stickerTagsDAO.create(jObj);
     }
 
     public void deleteTagFromSticker(Sticker sticker, Tag tag){
-        ContentValues cv = new ContentValues();
-        cv.put(Database.STICKER_TAGS_STICKER_ID, sticker.getStickerID());
-        cv.put(Database.STICKER_TAGS_TAG_ID, tag.getTagID());
         String where = Database.STICKER_TAGS_STICKER_ID + " = \"" + sticker.getStickerID().toString() + "\" AND"
                 + Database.STICKER_TAGS_TAG_ID + " = \"" + tag.getTagID().toString() + "\"";
-        Cursor cursor = db.retrieve(Database.STICKER_TAGS_TABLE, where, Database.STICKER_ID + Database.ORDER_ASC);
-        int count = cursor.getCount();
+        JSONArray jArr = stickerTagsDAO.retrieveWhere(where);
+        int count = jArr.length();
         if(count > 0){
-            db.delete(Database.STICKER_TAGS_TABLE, where);
+            stickerTagsDAO.deleteWhere(where);
         }
     }
 
     public void deleteSticker(Sticker sticker){
-        db.delete(Database.STICKER_TABLE, sticker.getStickerID());
+        stickerDAO.deleteOne(sticker.getStickerID());
     }
 
     public List<Sticker> getEmergentList(){
         List<Sticker> result = new ArrayList<>();
         String where = Database.STICKER_REMIND_TIME + " < " + System.currentTimeMillis();
-
-        Cursor cursor = db.retrieve(Database.STICKER_TABLE, where, Database.STICKER_DEADLINE);
-        int rowsNum = cursor.getCount();
-        if(rowsNum > 0){
-            cursor.moveToFirst();
-            for(int i = 0; i < rowsNum; i++){
-                Integer stickerID = cursor.getInt(0);
-                Integer categoryID = cursor.getInt(1);
-                String title = cursor.getString(2);
-                String description = cursor.getString(3);
-                Long deadline = cursor.getLong(4);
-                Long remindTime = cursor.getLong(5);
-                Boolean isFinished = (cursor.getInt(6) == 1)? true : false;
-                Sticker sticker = new Sticker(stickerID, categoryID, title, description, deadline, remindTime, isFinished);
+        JSONArray jArr = stickerDAO.retrieveWhere(where);
+        try {
+            for(int i = 0; i < jArr.length(); i++){
+                JSONObject jObj = jArr.getJSONObject(i);
+                Sticker sticker = new Sticker(jObj);
                 List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
                 sticker.setTagList(tagList);
                 result.add(sticker);
-                cursor.moveToNext();
             }
-            cursor.close();
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), "Error when parsing JSONArray");
         }
         return result;
     }

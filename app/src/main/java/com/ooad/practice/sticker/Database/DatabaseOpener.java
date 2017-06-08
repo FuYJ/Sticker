@@ -28,18 +28,18 @@ public class DatabaseOpener extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(Database.CREATE_STICKER_TABLE);
-        db.execSQL(Database.CREATE_CATEGORY_TABLE);
-        db.execSQL(Database.CREATE_TAG_TABLE);
-        db.execSQL(Database.CREATE_STICKER_TAGS_TABLE);
+        db.execSQL(IDataAccessObject.CREATE_STICKER_TABLE);
+        db.execSQL(IDataAccessObject.CREATE_CATEGORY_TABLE);
+        db.execSQL(IDataAccessObject.CREATE_TAG_TABLE);
+        db.execSQL(IDataAccessObject.CREATE_STICKER_TAGS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_STICKER_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_CATEGORY_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_TAG_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + Database.CREATE_STICKER_TAGS_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + IDataAccessObject.CREATE_STICKER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + IDataAccessObject.CREATE_CATEGORY_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + IDataAccessObject.CREATE_TAG_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + IDataAccessObject.CREATE_STICKER_TAGS_TABLE);
 
         onCreate(db);
     }
