@@ -116,7 +116,66 @@
     <TableRow
         android:id="@+id/stickerTagRow"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/stickerTags0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:text="1" />
+
+        <TextView
+            android:id="@+id/stickerTags1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:text="2" />
+
+        <TextView
+            android:id="@+id/stickerTags2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/stickerTags3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/stickerTags4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/stickerTags5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/stickerTags6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/stickerTags7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true" />
+    </TableRow>
 
     <CheckBox
         android:id="@+id/finished_check"

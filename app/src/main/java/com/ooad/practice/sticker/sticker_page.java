@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -17,10 +18,13 @@ import android.widget.Toast;
 
 import com.ooad.practice.sticker.Bean.Category;
 import com.ooad.practice.sticker.Bean.Sticker;
+import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Model.CategoryList;
 import com.ooad.practice.sticker.Model.StickerList;
 
 import java.util.List;
+
+import ColorPickerDialog.ColorPickerDialog;
 
 /**
  * Created by mousecat1 on 2017/5/31.
@@ -41,13 +45,13 @@ public class sticker_page extends ActionBarActivity {
     private TextView deadline;
     private TextView remind;
     private CheckBox isFinished;
-    private TableRow tags;
     private Button left;
     private Button right;
     private String state;
     private Sticker sticker;
     private Category category;
     private Dialog dialog;
+    private TextView[] tags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +69,11 @@ public class sticker_page extends ActionBarActivity {
         deadline = (TextView)findViewById(R.id.stickerDeadline_input);
         remind = (TextView)findViewById(R.id.stickerRemind_input);
         isFinished = (CheckBox)findViewById(R.id.finished_check);
-        tags = (TableRow)findViewById(R.id.stickerTagRow);
         left = (Button)findViewById(R.id.leftButton);
         left.setOnClickListener(leftButtonListener());
         right = (Button)findViewById(R.id.rightButton);
         right.setOnClickListener(rightButtonListener());
+        handleTags();
         updateView();
     }
 
@@ -109,6 +113,19 @@ public class sticker_page extends ActionBarActivity {
         categories.setSelection(selectedIndex);
     }
 
+    private void handleTags(){
+        tags = new TextView[8];
+        String headString = "stickerTags";
+        String temp;
+        List<Tag> tagList = sticker.getTagList();
+        for (int i = 0; i < 2; i++) {
+            temp = headString + i;
+            tags[i] = (TextView) findViewById(this.getResources().getIdentifier(temp, "id", getPackageName()));
+            tags[i].setBackgroundColor(0xFFFF0000);
+            tags[i].setOnClickListener(tagListener());
+        }
+    }
+
     private void setUIEnable(boolean setValue){
         categories.setEnabled(setValue);
         title.setEnabled(setValue);
@@ -122,6 +139,43 @@ public class sticker_page extends ActionBarActivity {
         description.setText(sticker.getDescription());
         deadline.setText(sticker.getDeadline());
         remind.setText(sticker.getRemindTime());
+    }
+
+    private View.OnClickListener tagListener(){
+        return new View.OnClickListener() {
+            public void onClick(View v) {
+                final TextView t = (TextView)findViewById(v.getId());
+                showTagDialog(t);
+            }
+        };
+    }
+
+    private void showTagDialog(TextView text){
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.popup_tag);
+        dialog.setTitle("Tags");
+        TextView color = (TextView)findViewById(R.id.tagColor_inpput);
+        TextView title = (TextView)findViewById(R.id.tagTitle_input);
+        ListView tagList = (ListView)findViewById(R.id.tagList);
+        color.setOnClickListener(colorListener());
+        dialog.show();
+    }
+
+    private View.OnClickListener colorListener(){
+        return new View.OnClickListener() {
+            public void onClick(View v) {
+                Dialog d;
+                final TextView text = (TextView)findViewById(v.getId());
+                d = new ColorPickerDialog(v.getContext(), 0xFFFF0000, "11",
+                        new ColorPickerDialog.OnColorChangedListener() {
+                            public void colorChanged(int color2)
+                            {
+                                text.setBackgroundColor(color2);
+                            }
+                        });
+                d.show();
+            }
+        };
     }
 
     private AdapterView.OnItemSelectedListener spinnerSelectedItem(){
