@@ -11,18 +11,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by fuyiru on 2017/5/29.
+ * Created by fuyiru on 2017/6/8.
  */
 
-public class CategoryAccessObject implements IDataAccessObject {
+public class StickerAccessObject implements IDataAccessObject {
 
     private SQLiteDatabase db;
-    private String tableName = CATEGORY_TABLE;
-    private String categoryID = CATEGORY_ID;
-    private String categoryTitle = CATEGORY_TITLE;
-    private String categoryDescription = CATEGORY_DESCRIPTION;
+    private String tableName = IDataAccessObject.STICKER_TABLE;
+    private String stickerID = STICKER_ID;
+    private String categoryID = STICKER_CATEGORY_ID;
+    private String stickerTitle = STICKER_TITLE;
+    private String stickerDescription = STICKER_DESCRIPTION;
+    private String stickerDeadline = STICKER_DEADLINE;
+    private String stickerRemindTime = STICKER_REMIND_TIME;
+    private String stickerIsFinished = STICKER_IS_FINISHED;
 
-    public CategoryAccessObject(Context context){
+    public StickerAccessObject(Context context){
         db = DatabaseOpener.getDatabase(context);
     }
 
@@ -45,14 +49,14 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public void updateOne(Integer ID, JSONObject cols) {
-        String where = categoryID + " = " + ID.toString();
+        String where = stickerID + " = " + ID.toString();
         ContentValues cv = convertJSONObjectToContentValues(cols);
         db.update(tableName, cv, where, null);
     }
 
     @Override
     public JSONArray retrieveWhere(String where) {
-        String orderBy = categoryID + " " + ORDER_ASC;
+        String orderBy = stickerID + " " + ORDER_ASC;
         Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
         JSONArray jArr = putRowsIntoJSONArray(cursor);
         cursor.close();
@@ -61,7 +65,7 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public JSONArray retrieveAll() {
-        String orderBy = categoryID + " " + ORDER_ASC;
+        String orderBy = stickerID + " " + ORDER_ASC;
         Cursor cursor = db.query(tableName, null, null, null, null, null, orderBy);
         JSONArray jArr = putRowsIntoJSONArray(cursor);
         cursor.close();
@@ -70,8 +74,8 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public JSONObject retrieveOne(Integer ID) {
-        String orderBy = categoryID + " " + ORDER_ASC;
-        String where = categoryID + " = " + ID.toString();
+        String orderBy = stickerID + " " + ORDER_ASC;
+        String where = stickerID + " = " + ID.toString();
         Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
         JSONObject jObj = putRowIntoJSONObject(cursor);
         cursor.close();
@@ -85,7 +89,7 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public void deleteOne(Integer ID) {
-        String where = categoryID + " = " + ID.toString();
+        String where = stickerID + " = " + ID.toString();
         db.delete(tableName, where, null);
     }
 
@@ -97,9 +101,13 @@ public class CategoryAccessObject implements IDataAccessObject {
             try{
                 for(int i = 0; i < rowsNum; i++){
                     JSONObject jObj = new JSONObject();
-                    jObj.put(categoryID, cursor.getInt(0));
-                    jObj.put(categoryTitle, cursor.getString(1));
-                    jObj.put(categoryDescription, cursor.getString(2));
+                    jObj.put(stickerID, cursor.getInt(0));
+                    jObj.put(categoryID, cursor.getInt(1));
+                    jObj.put(stickerTitle, cursor.getString(2));
+                    jObj.put(stickerDescription, cursor.getString(3));
+                    jObj.put(stickerDeadline, cursor.getLong(4));
+                    jObj.put(stickerRemindTime, cursor.getLong(5));
+                    jObj.put(stickerIsFinished, (cursor.getInt(6) == 1)? true : false);
                     jArr.put(jObj);
                     cursor.moveToNext();
                 }
@@ -118,9 +126,13 @@ public class CategoryAccessObject implements IDataAccessObject {
         if(rowsNum > 0){
             cursor.moveToFirst();
             try{
-                jObj.put(categoryID, cursor.getInt(0));
-                jObj.put(categoryTitle, cursor.getString(1));
-                jObj.put(categoryDescription, cursor.getString(2));
+                jObj.put(stickerID, cursor.getInt(0));
+                jObj.put(categoryID, cursor.getInt(1));
+                jObj.put(stickerTitle, cursor.getString(2));
+                jObj.put(stickerDescription, cursor.getString(3));
+                jObj.put(stickerDeadline, cursor.getLong(4));
+                jObj.put(stickerRemindTime, cursor.getLong(5));
+                jObj.put(stickerIsFinished, (cursor.getInt(6) == 1)? true : false);
             }
             catch (JSONException e){
                 Log.e(this.getClass().toString(), e.getMessage());
@@ -133,10 +145,14 @@ public class CategoryAccessObject implements IDataAccessObject {
     private ContentValues convertJSONObjectToContentValues(JSONObject cols){
         ContentValues cv = new ContentValues();
         try {
-            if(cols.getInt(categoryID) != 0)
-                cv.put(categoryID, cols.getInt(categoryID));
-            cv.put(categoryTitle, cols.getString(categoryTitle));
-            cv.put(categoryDescription, cols.getString(categoryDescription));
+            if(cols.getInt(stickerID) != 0)
+                cv.put(stickerID, cols.getInt(stickerID));
+            cv.put(categoryID, cols.getInt(categoryID));
+            cv.put(stickerTitle, cols.getString(stickerTitle));
+            cv.put(stickerDescription, cols.getString(stickerDescription));
+            cv.put(stickerDeadline, cols.getLong(stickerDeadline));
+            cv.put(stickerRemindTime, cols.getLong(stickerRemindTime));
+            cv.put(stickerIsFinished, cols.getBoolean(stickerIsFinished));
         }
         catch (JSONException e){
             Log.e(this.getClass().toString(), e.getMessage());

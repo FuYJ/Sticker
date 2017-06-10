@@ -2,9 +2,14 @@ package com.ooad.practice.sticker.Bean;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import com.ooad.practice.sticker.Database.IDataAccessObject;
 import com.ooad.practice.sticker.MainActivity;
 import com.ooad.practice.sticker.MainApplication;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -46,6 +51,39 @@ public class Sticker implements Serializable {
         this.deadline = deadline;
         this.remindTime = remindTime;
         this.isFinished = isFinished;
+    }
+
+    public Sticker(JSONObject jObj){
+        try {
+            this.stickerID = jObj.getInt(IDataAccessObject.STICKER_ID);
+            this.categoryID = jObj.getInt(IDataAccessObject.STICKER_CATEGORY_ID);
+            this.title = jObj.getString(IDataAccessObject.STICKER_TITLE);
+            this.description = jObj.getString(IDataAccessObject.STICKER_DESCRIPTION);
+            this.deadline = calculateDate(jObj.getLong(IDataAccessObject.STICKER_DEADLINE));
+            this.remindTime = calculateDate(jObj.getLong(IDataAccessObject.STICKER_REMIND_TIME));
+            this.isFinished = jObj.getBoolean(IDataAccessObject.STICKER_IS_FINISHED);
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
+        }
+    }
+
+    public JSONObject toJSONObject(){
+        JSONObject jObj = new JSONObject();
+        try{
+            jObj.put(IDataAccessObject.STICKER_ID, this.stickerID);
+            jObj.put(IDataAccessObject.STICKER_CATEGORY_ID, this.categoryID);
+            jObj.put(IDataAccessObject.STICKER_TITLE, this.title);
+            jObj.put(IDataAccessObject.STICKER_DESCRIPTION, this.description);
+            jObj.put(IDataAccessObject.STICKER_DEADLINE, calculateDate(this.deadline));
+            jObj.put(IDataAccessObject.STICKER_REMIND_TIME, calculateDate(this.remindTime));
+            jObj.put(IDataAccessObject.STICKER_IS_FINISHED, this.isFinished);
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
+            return null;
+        }
+        return jObj;
     }
 
     public Integer getStickerID() {

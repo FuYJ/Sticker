@@ -1,6 +1,7 @@
 package com.ooad.practice.sticker.Database;
 
 import android.content.ContentValues;
+import android.content.Context;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -86,17 +87,19 @@ public interface IDataAccessObject {
 
     void close();
 
-    void create(String tableName, ContentValues cols);
+    void create(JSONObject cols);
 
-    void update(String tableName, String where, ContentValues cols);
+    void updateWhere(String where, JSONObject cols);
 
-    JSONArray retrieve(String tableName, String where);
+    void updateOne(Integer ID, JSONObject cols);
 
-    JSONArray retrieve(String tableName);
+    JSONArray retrieveWhere(String where);
 
-    JSONObject retrieve(String tableName, Integer ID);
+    JSONArray retrieveAll();
 
-    void delete(String tableName, String where);
+    JSONObject retrieveOne(Integer ID);
 
-    void delete(String tableName, Integer ID);
+    void deleteWhere(String where);
+
+    void deleteOne(Integer ID);
 }

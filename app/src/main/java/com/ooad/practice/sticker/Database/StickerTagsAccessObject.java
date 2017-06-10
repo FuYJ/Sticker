@@ -11,18 +11,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by fuyiru on 2017/5/29.
+ * Created by fuyiru on 2017/6/8.
  */
 
-public class CategoryAccessObject implements IDataAccessObject {
+public class StickerTagsAccessObject implements IDataAccessObject {
 
     private SQLiteDatabase db;
-    private String tableName = CATEGORY_TABLE;
-    private String categoryID = CATEGORY_ID;
-    private String categoryTitle = CATEGORY_TITLE;
-    private String categoryDescription = CATEGORY_DESCRIPTION;
+    private String tableName = IDataAccessObject.STICKER_TAGS_TABLE;
+    private String tagID = STICKER_TAGS_TAG_ID;
+    private String stickerID = STICKER_TAGS_STICKER_ID;
 
-    public CategoryAccessObject(Context context){
+    public StickerTagsAccessObject(Context context){
         db = DatabaseOpener.getDatabase(context);
     }
 
@@ -45,14 +44,12 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public void updateOne(Integer ID, JSONObject cols) {
-        String where = categoryID + " = " + ID.toString();
-        ContentValues cv = convertJSONObjectToContentValues(cols);
-        db.update(tableName, cv, where, null);
+        Log.w(this.getClass().toString(), "Cannot update stickerTags table by single ID");
     }
 
     @Override
     public JSONArray retrieveWhere(String where) {
-        String orderBy = categoryID + " " + ORDER_ASC;
+        String orderBy = tagID + " " + ORDER_ASC;
         Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
         JSONArray jArr = putRowsIntoJSONArray(cursor);
         cursor.close();
@@ -61,7 +58,7 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public JSONArray retrieveAll() {
-        String orderBy = categoryID + " " + ORDER_ASC;
+        String orderBy = tagID + " " + ORDER_ASC;
         Cursor cursor = db.query(tableName, null, null, null, null, null, orderBy);
         JSONArray jArr = putRowsIntoJSONArray(cursor);
         cursor.close();
@@ -70,12 +67,8 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public JSONObject retrieveOne(Integer ID) {
-        String orderBy = categoryID + " " + ORDER_ASC;
-        String where = categoryID + " = " + ID.toString();
-        Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
-        JSONObject jObj = putRowIntoJSONObject(cursor);
-        cursor.close();
-        return jObj;
+        Log.w(this.getClass().toString(), "Cannot retrieve stickerTags table by single ID");
+        return null;
     }
 
     @Override
@@ -85,8 +78,7 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public void deleteOne(Integer ID) {
-        String where = categoryID + " = " + ID.toString();
-        db.delete(tableName, where, null);
+        Log.w(this.getClass().toString(), "Cannot delete stickerTags table by single ID");
     }
 
     private JSONArray putRowsIntoJSONArray(Cursor cursor){
@@ -97,9 +89,8 @@ public class CategoryAccessObject implements IDataAccessObject {
             try{
                 for(int i = 0; i < rowsNum; i++){
                     JSONObject jObj = new JSONObject();
-                    jObj.put(categoryID, cursor.getInt(0));
-                    jObj.put(categoryTitle, cursor.getString(1));
-                    jObj.put(categoryDescription, cursor.getString(2));
+                    jObj.put(tagID, cursor.getInt(0));
+                    jObj.put(stickerID, cursor.getInt(1));
                     jArr.put(jObj);
                     cursor.moveToNext();
                 }
@@ -112,31 +103,11 @@ public class CategoryAccessObject implements IDataAccessObject {
         return jArr;
     }
 
-    private JSONObject putRowIntoJSONObject(Cursor cursor){
-        JSONObject jObj = new JSONObject();
-        int rowsNum = cursor.getCount();
-        if(rowsNum > 0){
-            cursor.moveToFirst();
-            try{
-                jObj.put(categoryID, cursor.getInt(0));
-                jObj.put(categoryTitle, cursor.getString(1));
-                jObj.put(categoryDescription, cursor.getString(2));
-            }
-            catch (JSONException e){
-                Log.e(this.getClass().toString(), e.getMessage());
-                return null;
-            }
-        }
-        return jObj;
-    }
-
     private ContentValues convertJSONObjectToContentValues(JSONObject cols){
         ContentValues cv = new ContentValues();
         try {
-            if(cols.getInt(categoryID) != 0)
-                cv.put(categoryID, cols.getInt(categoryID));
-            cv.put(categoryTitle, cols.getString(categoryTitle));
-            cv.put(categoryDescription, cols.getString(categoryDescription));
+            cv.put(tagID, cols.getInt(tagID));
+            cv.put(stickerID, cols.getInt(stickerID));
         }
         catch (JSONException e){
             Log.e(this.getClass().toString(), e.getMessage());

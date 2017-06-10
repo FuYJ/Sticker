@@ -2,11 +2,18 @@ package com.ooad.practice.sticker.Model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.ooad.practice.sticker.Bean.Category;
+import com.ooad.practice.sticker.Database.CategoryAccessObject;
 import com.ooad.practice.sticker.Database.Database;
+import com.ooad.practice.sticker.Database.IDataAccessObject;
 import com.ooad.practice.sticker.Database.IDatabase;
 import com.ooad.practice.sticker.MainApplication;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,89 +24,72 @@ import java.util.List;
 
 public class CategoryList {
     private static CategoryList instance;
-    private IDatabase db;
+    private IDataAccessObject categoryDAO;
 
-    private CategoryList(){
-        db = new Database(MainApplication.getContext());
+    public CategoryList(){
+        categoryDAO = new CategoryAccessObject(MainApplication.getContext());
     }
 
-    private CategoryList(IDatabase db){
-        this.db = db;
+    public CategoryList(IDataAccessObject dao){
+        this.categoryDAO = dao;
     }
 
-    public static CategoryList getInstance(){
+    /*public static CategoryList getInstance(){
         if(instance == null){
             instance = new CategoryList();
         }
         return instance;
     }
 
-    public static CategoryList getInstance(IDatabase db){
+    public static CategoryList getInstance(IDataAccessObject dao){
         if(instance == null){
-            instance = new CategoryList(db);
+            instance = new CategoryList(dao);
         }
         return instance;
-    }
+    }*/
 
     public List<Category> getCategoryList(String keyword){
         List<Category> result = new ArrayList<>();
-        Cursor cursor;
+        JSONArray jArr;
 
-        if(keyword == null)
-            cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_ID + Database.ORDER_ASC);
-        else
-            cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"", Database.CATEGORY_ID + Database.ORDER_ASC);
-        int rowsNum = cursor.getCount();
-        if(rowsNum > 0){
-            cursor.moveToFirst();
-            for(int i = 0; i < rowsNum; i++){
-                Integer categoryID = cursor.getInt(0);
-                String title = cursor.getString(1);
-                String description = cursor.getString(2);
-                Category category = new Category(categoryID, title, description);
+        if(keyword == null){
+            jArr = categoryDAO.retrieveAll();
+        }
+        else{
+            String where = Database.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
+            jArr = categoryDAO.retrieveWhere(where);
+        }
+
+        try{
+            for(int i = 0; i < jArr.length(); i++){
+                JSONObject jObj = jArr.getJSONObject(i);
+                Category category = new Category(jObj);
                 result.add(category);
-                cursor.moveToNext();
             }
-            cursor.close();
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
         }
 
         return result;
     }
 
     public int setCategory(Category category){
-        ContentValues cv = new ContentValues();
-        cv.put(Database.CATEGORY_TITLE, category.getTitle());
-        cv.put(Database.CATEGORY_DESCRIPTION, category.getDescription());
+        JSONObject jObj = category.toJSONObject();
+        String where = Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"";
+        if(categoryDAO.retrieveWhere(where).length() > 0)
+            return -1;
 
         if(category.getCategoryID() == 0){
-            Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"", null);
-            int rowsNum = cursor.getCount();
-            if(rowsNum > 0){
-                cursor.close();
-                return -1;
-            }
-            cursor.close();
-
-            db.create(Database.CATEGORY_TABLE, cv);
+            categoryDAO.create(jObj);
         }
         else{
-            Cursor cursor = db.retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"", null);
-            int rowsNum = cursor.getCount();
-            if(rowsNum > 0){
-                cursor.moveToFirst();
-                if(cursor.getInt(0) != category.getCategoryID()){
-                    cursor.close();
-                    return -1;
-                }
-            }
-            cursor.close();
-
-            db.update(Database.CATEGORY_TABLE, Database.CATEGORY_ID + "=" + category.getCategoryID().toString(),cv);
+            categoryDAO.updateOne(category.getCategoryID(), jObj);
         }
         return 0;
     }
 
     public void deleteCategory(Category category) {
-        db.delete(Database.CATEGORY_TABLE, category.getCategoryID());
+        categoryDAO.deleteOne(category.getCategoryID());
     }
 }

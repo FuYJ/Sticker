@@ -11,18 +11,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by fuyiru on 2017/5/29.
+ * Created by fuyiru on 2017/6/8.
  */
 
-public class CategoryAccessObject implements IDataAccessObject {
+public class TagAccessObject implements IDataAccessObject {
 
     private SQLiteDatabase db;
-    private String tableName = CATEGORY_TABLE;
-    private String categoryID = CATEGORY_ID;
-    private String categoryTitle = CATEGORY_TITLE;
-    private String categoryDescription = CATEGORY_DESCRIPTION;
+    private String tableName = IDataAccessObject.TAG_TABLE;
+    private String tagID = TAG_ID;
+    private String tagTitle = TAG_TITLE;
+    private String tagColorR = TAG_COLOR_R;
+    private String tagColorG = TAG_COLOR_G;
+    private String tagColorB = TAG_COLOR_B;
 
-    public CategoryAccessObject(Context context){
+    public TagAccessObject(Context context){
         db = DatabaseOpener.getDatabase(context);
     }
 
@@ -45,14 +47,14 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public void updateOne(Integer ID, JSONObject cols) {
-        String where = categoryID + " = " + ID.toString();
+        String where = tagID + " = " + ID.toString();
         ContentValues cv = convertJSONObjectToContentValues(cols);
         db.update(tableName, cv, where, null);
     }
 
     @Override
     public JSONArray retrieveWhere(String where) {
-        String orderBy = categoryID + " " + ORDER_ASC;
+        String orderBy = tagID + " " + ORDER_ASC;
         Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
         JSONArray jArr = putRowsIntoJSONArray(cursor);
         cursor.close();
@@ -61,7 +63,7 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public JSONArray retrieveAll() {
-        String orderBy = categoryID + " " + ORDER_ASC;
+        String orderBy = tagID + " " + ORDER_ASC;
         Cursor cursor = db.query(tableName, null, null, null, null, null, orderBy);
         JSONArray jArr = putRowsIntoJSONArray(cursor);
         cursor.close();
@@ -70,8 +72,8 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public JSONObject retrieveOne(Integer ID) {
-        String orderBy = categoryID + " " + ORDER_ASC;
-        String where = categoryID + " = " + ID.toString();
+        String orderBy = tagID + " " + ORDER_ASC;
+        String where = tagID + " = " + ID.toString();
         Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
         JSONObject jObj = putRowIntoJSONObject(cursor);
         cursor.close();
@@ -85,7 +87,7 @@ public class CategoryAccessObject implements IDataAccessObject {
 
     @Override
     public void deleteOne(Integer ID) {
-        String where = categoryID + " = " + ID.toString();
+        String where = tagID + " = " + ID.toString();
         db.delete(tableName, where, null);
     }
 
@@ -97,9 +99,11 @@ public class CategoryAccessObject implements IDataAccessObject {
             try{
                 for(int i = 0; i < rowsNum; i++){
                     JSONObject jObj = new JSONObject();
-                    jObj.put(categoryID, cursor.getInt(0));
-                    jObj.put(categoryTitle, cursor.getString(1));
-                    jObj.put(categoryDescription, cursor.getString(2));
+                    jObj.put(tagID, cursor.getInt(0));
+                    jObj.put(tagTitle, cursor.getString(1));
+                    jObj.put(tagColorR, cursor.getInt(2));
+                    jObj.put(tagColorG, cursor.getInt(3));
+                    jObj.put(tagColorB, cursor.getInt(4));
                     jArr.put(jObj);
                     cursor.moveToNext();
                 }
@@ -118,9 +122,11 @@ public class CategoryAccessObject implements IDataAccessObject {
         if(rowsNum > 0){
             cursor.moveToFirst();
             try{
-                jObj.put(categoryID, cursor.getInt(0));
-                jObj.put(categoryTitle, cursor.getString(1));
-                jObj.put(categoryDescription, cursor.getString(2));
+                jObj.put(tagID, cursor.getInt(0));
+                jObj.put(tagTitle, cursor.getString(1));
+                jObj.put(tagColorR, cursor.getInt(2));
+                jObj.put(tagColorG, cursor.getInt(3));
+                jObj.put(tagColorB, cursor.getInt(4));
             }
             catch (JSONException e){
                 Log.e(this.getClass().toString(), e.getMessage());
@@ -133,10 +139,12 @@ public class CategoryAccessObject implements IDataAccessObject {
     private ContentValues convertJSONObjectToContentValues(JSONObject cols){
         ContentValues cv = new ContentValues();
         try {
-            if(cols.getInt(categoryID) != 0)
-                cv.put(categoryID, cols.getInt(categoryID));
-            cv.put(categoryTitle, cols.getString(categoryTitle));
-            cv.put(categoryDescription, cols.getString(categoryDescription));
+            if(cols.getInt(tagID) != 0)
+                cv.put(tagID, cols.getInt(tagID));
+            cv.put(tagTitle, cols.getString(tagTitle));
+            cv.put(tagColorR, cols.getInt(tagColorR));
+            cv.put(tagColorG, cols.getInt(tagColorG));
+            cv.put(tagColorB, cols.getInt(tagColorB));
         }
         catch (JSONException e){
             Log.e(this.getClass().toString(), e.getMessage());
