@@ -30,18 +30,18 @@ public class TagList {
     private IDataAccessObject tagDAO;
     private IDataAccessObject stickerTagsDAO;
 
-    private TagList() {
+    public TagList() {
         Context context = MainApplication.getContext();
         tagDAO = new TagAccessObject(context);
         stickerTagsDAO = new StickerTagsAccessObject(context);
     }
 
-    public static TagList getInstance(){
+    /*public static TagList getInstance(){
         if(instance == null){
             instance = new TagList();
         }
         return instance;
-    }
+    }*/
 
     public List<Tag> getTagListByStickerId(Integer stickerId){
         List<Tag> result = new ArrayList<>();

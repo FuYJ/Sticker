@@ -29,18 +29,18 @@ public class StickerList {
     private IDataAccessObject stickerDAO;
     private IDataAccessObject stickerTagsDAO;
 
-    private StickerList(){
+    public StickerList(){
         Context context = MainApplication.getContext();
         stickerDAO = new StickerAccessObject(context);
         stickerTagsDAO = new StickerTagsAccessObject(context);
     }
 
-    public static StickerList getInstance(){
+    /*public static StickerList getInstance(){
         if(instance == null){
             instance = new StickerList();
         }
         return instance;
-    }
+    }*/
 
     public List<Sticker> getStickerListByCategoryId(Integer categoryId){
         List<Sticker> result = new ArrayList<>();

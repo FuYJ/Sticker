@@ -1,28 +1,22 @@
 package com.ooad.practice.sticker.Model;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.database.CharArrayBuffer;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.database.DataSetObserver;
-import android.net.Uri;
-import android.os.Bundle;
+import android.test.mock.MockContext;
 
 import com.ooad.practice.sticker.Bean.Category;
 import com.ooad.practice.sticker.Database.Database;
 import com.ooad.practice.sticker.Database.DatabaseOpener;
-import com.ooad.practice.sticker.Database.IDatabase;
+import com.ooad.practice.sticker.Database.IDataAccessObject;
 import com.ooad.practice.sticker.Database.StubCursor;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.junit.After;
-import org.junit.Assert;
+import org.jmock.lib.legacy.ClassImposteriser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -32,31 +26,44 @@ import static org.junit.Assert.*;
  */
 public class CategoryListTest {
     Mockery context = new Mockery();
-    IDatabase database = context.mock(IDatabase.class);
-    //DatabaseOpener databaseOpener = context.mock(DatabaseOpener.class);
+    Mockery context1 = new Mockery(){{
+        setImposteriser(ClassImposteriser.INSTANCE);
+    }};
+    IDataAccessObject dao = context.mock(IDataAccessObject.class);
+    DatabaseOpener dbOpener = context1.mock(DatabaseOpener.class);
     CategoryList categoryList;
-    //List<Category> stubCategoryList = new ArrayList<>();
+    JSONArray fakeCategoryListData1;
+    String fakeCategoryListData1_str = "[" +
+            "{\""+ IDataAccessObject.CATEGORY_ID +"\": 1, \"" + IDataAccessObject.CATEGORY_TITLE + "\": \"1\", \"" + IDataAccessObject.CATEGORY_DESCRIPTION + "\": \"1\"}" +
+            "{\""+ IDataAccessObject.CATEGORY_ID +"\": 2, \"" + IDataAccessObject.CATEGORY_TITLE + "\": \"2\", \"" + IDataAccessObject.CATEGORY_DESCRIPTION + "\": \"2\"}" +
+            "{\""+ IDataAccessObject.CATEGORY_ID +"\": 3, \"" + IDataAccessObject.CATEGORY_TITLE + "\": \"3\", \"" + IDataAccessObject.CATEGORY_DESCRIPTION + "\": \"3\"}" +
+            "]";
+    JSONObject fakeCategoryData1;
+    String fakeCategoryData1_str = "{\""+ IDataAccessObject.CATEGORY_ID +"\": 0, \"" + IDataAccessObject.CATEGORY_TITLE + "\": \"1\", \"" + IDataAccessObject.CATEGORY_DESCRIPTION + "\": \"1\"}";
 
     @Before
     public void setUp() throws Exception {
-        categoryList = CategoryList.getInstance(database);
-        //Category category0 = new Category(0, "0", "0");
-        //Category category1 = new Category(1, "1", "1");
-        //stubCategoryList.add(category0);
-        //stubCategoryList.add(category1);
+        categoryList = CategoryList.getInstance(dao);
+
+        //fakeCategoryListData1
+        fakeCategoryListData1 = new JSONArray(fakeCategoryListData1_str);
+
+        //fakeCategoryData1
+        fakeCategoryData1 = new JSONObject(fakeCategoryData1_str);
     }
 
     @Test
     public void getCategoryList() throws Exception {
         context.checking(new Expectations(){{
-            oneOf(database).retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_ID + Database.ORDER_ASC);
-            will(returnValue(new StubCursor(2)));
+            oneOf(dao).retrieveAll();
+            will(returnValue(fakeCategoryListData1));
         }});
 
         List<Category> result = categoryList.getCategoryList(null);
         context.assertIsSatisfied();
         int num = result.size();
-        assertEquals(2, num);
+        assertEquals(3, num);
+        assertEquals(1, (int)result.get(0).getCategoryID());
     }
 
     @Test
@@ -68,11 +75,12 @@ public class CategoryListTest {
         cv.put(Database.CATEGORY_DESCRIPTION, "1");
 
         context.checking(new Expectations(){{
-            oneOf(database).retrieve(Database.CATEGORY_TABLE, Database.CATEGORY_ID + Database.ORDER_ASC);
-            will(returnValue(cursor));
+            oneOf(dao).retrieveAll();
+            will(returnValue(fakeCategoryListData1));
         }});
         context.checking(new Expectations(){{
-            oneOf(database).create(Database.CATEGORY_TABLE, cv);
+            oneOf(dao).create(fakeCategoryData1);
+            will(returnValue(-1));
         }});
 
         categoryList.setCategory(new Category(null, "1", "1"));

@@ -26,15 +26,15 @@ public class CategoryList {
     private static CategoryList instance;
     private IDataAccessObject categoryDAO;
 
-    private CategoryList(){
+    public CategoryList(){
         categoryDAO = new CategoryAccessObject(MainApplication.getContext());
     }
 
-    private CategoryList(IDataAccessObject dao){
+    public CategoryList(IDataAccessObject dao){
         this.categoryDAO = dao;
     }
 
-    public static CategoryList getInstance(){
+    /*public static CategoryList getInstance(){
         if(instance == null){
             instance = new CategoryList();
         }
@@ -46,7 +46,7 @@ public class CategoryList {
             instance = new CategoryList(dao);
         }
         return instance;
-    }
+    }*/
 
     public List<Category> getCategoryList(String keyword){
         List<Category> result = new ArrayList<>();
