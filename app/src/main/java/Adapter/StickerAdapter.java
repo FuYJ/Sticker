@@ -45,7 +45,7 @@ public class StickerAdapter extends BaseAdapter {
         this.isCreateButtonVisible = isCreateButtonVisible;
         this.isEditButtonVisible = isEditButtonVisible;
         this.context = c;
-        this.sticker = StickerList.getInstance();
+        this.sticker = new StickerList();
         this.category = category;
     }
 

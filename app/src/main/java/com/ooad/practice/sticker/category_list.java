@@ -38,7 +38,7 @@ public class category_list extends ActionBarActivity {
         settingButton.setOnClickListener(settingsListener());
         searchInput = (EditText)findViewById(R.id.searchInput);
         searchInput.setOnKeyListener(searchInputLinstener());
-        category = CategoryList.getInstance();
+        category = new CategoryList();
 
         updateView();
     }

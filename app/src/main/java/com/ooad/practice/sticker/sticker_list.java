@@ -42,7 +42,7 @@ public class sticker_list extends ActionBarActivity {
         settingButton = (Button)findViewById(R.id.setting);
         settingButton.setOnClickListener(settingsListener());
         searchInput = (EditText)findViewById(R.id.searchInput);
-        sticker = StickerList.getInstance();
+        sticker = new StickerList();
         update();
     }
 

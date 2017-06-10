@@ -50,7 +50,7 @@ public class StickerList {
             try {
                 JSONObject jObj = jArr.getJSONObject(i);
                 Sticker sticker = new Sticker(jObj);
-                List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
+                List<Tag> tagList = new TagList().getTagListByStickerId(sticker.getStickerID());
                 sticker.setTagList(tagList);
                 result.add(sticker);
             }
@@ -71,7 +71,7 @@ public class StickerList {
             try {
                 JSONObject jObj = jArr.getJSONObject(i);
                 Sticker sticker = new Sticker(jObj);
-                List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
+                List<Tag> tagList = new TagList().getTagListByStickerId(sticker.getStickerID());
                 sticker.setTagList(tagList);
                 result.add(sticker);
             }
@@ -166,7 +166,7 @@ public class StickerList {
             for(int i = 0; i < jArr.length(); i++){
                 JSONObject jObj = jArr.getJSONObject(i);
                 Sticker sticker = new Sticker(jObj);
-                List<Tag> tagList = TagList.getInstance().getTagListByStickerId(sticker.getStickerID());
+                List<Tag> tagList = new TagList().getTagListByStickerId(sticker.getStickerID());
                 sticker.setTagList(tagList);
                 result.add(sticker);
             }

@@ -62,7 +62,7 @@ public class sticker_page extends ActionBarActivity {
         categories = (Spinner)findViewById(R.id.categoryList);
         categories.setOnItemSelectedListener(spinnerSelectedItem());
         state = (String)getIntent().getBundleExtra("Bundle").getSerializable("State");
-        stickerList = StickerList.getInstance();
+        stickerList = new StickerList();
         table = getApplicationContext().getResources().getStringArray(R.array.sticker_state);
         title = (TextView)findViewById(R.id.stickerTitle_input);
         description = (TextView)findViewById(R.id.stickerDescription_input);
@@ -99,7 +99,7 @@ public class sticker_page extends ActionBarActivity {
     }
 
     private void updateSpinner(){
-        categoryList = CategoryList.getInstance().getCategoryList(null);
+        categoryList = new CategoryList().getCategoryList(null);
         String[] temp = new String[categoryList.size()];
         int selectedIndex = 0;
         for(int i = 0; i < categoryList.size(); i++){
@@ -117,7 +117,7 @@ public class sticker_page extends ActionBarActivity {
         tags = new TextView[8];
         String headString = "stickerTags";
         String temp;
-        List<Tag> tagList = sticker.getTagList();
+//        List<Tag> tagList = sticker.getTagList();
         for (int i = 0; i < 2; i++) {
             temp = headString + i;
             tags[i] = (TextView) findViewById(this.getResources().getIdentifier(temp, "id", getPackageName()));

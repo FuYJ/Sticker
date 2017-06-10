@@ -51,7 +51,7 @@ public class Settings extends PreferenceActivity {
         }
 
         private void switchNotification(boolean notificationValue){
-            List<Sticker> stickerList = StickerList.getInstance().getEmergentList();
+            List<Sticker> stickerList = new StickerList().getEmergentList();
             NotificationManager manager = (NotificationManager) MainApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
             if(notificationValue){

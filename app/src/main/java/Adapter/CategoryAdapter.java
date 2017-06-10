@@ -37,7 +37,7 @@ public class CategoryAdapter extends BaseAdapter {
         this.isCreateButtonVisible = isCreateButtonVisible;
         this.isEditButtonVisible = isEditButtonVisible;
         this.context = c;
-        this.category = CategoryList.getInstance();
+        this.category = new CategoryList();
     }
     @Override
     public int getCount() {
