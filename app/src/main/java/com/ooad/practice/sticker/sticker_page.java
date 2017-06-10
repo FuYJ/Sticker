@@ -154,23 +154,22 @@ public class sticker_page extends ActionBarActivity {
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.popup_tag);
         dialog.setTitle("Tags");
-        TextView color = (TextView)findViewById(R.id.tagColor_inpput);
-        TextView title = (TextView)findViewById(R.id.tagTitle_input);
-        ListView tagList = (ListView)findViewById(R.id.tagList);
-        color.setOnClickListener(colorListener());
+        TextView color = (TextView)dialog.findViewById(R.id.tagColor_inpput);
+        TextView title = (TextView)dialog.findViewById(R.id.tagTitle_input);
+        ListView tagList = (ListView)dialog.findViewById(R.id.tagList);
+        color.setOnClickListener(colorListener(color));
         dialog.show();
     }
 
-    private View.OnClickListener colorListener(){
+    private View.OnClickListener colorListener(final TextView color){
         return new View.OnClickListener() {
             public void onClick(View v) {
                 Dialog d;
-                final TextView text = (TextView)findViewById(v.getId());
                 d = new ColorPickerDialog(v.getContext(), 0xFFFF0000, "11",
                         new ColorPickerDialog.OnColorChangedListener() {
                             public void colorChanged(int color2)
                             {
-                                text.setBackgroundColor(color2);
+                                color.setBackgroundColor(color2);
                             }
                         });
                 d.show();
