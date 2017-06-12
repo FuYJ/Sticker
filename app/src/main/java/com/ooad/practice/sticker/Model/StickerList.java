@@ -25,7 +25,6 @@ import java.util.List;
  */
 
 public class StickerList {
-    private static StickerList instance;
     private IDataAccessObject stickerDAO;
     private IDataAccessObject stickerTagsDAO;
 
@@ -35,12 +34,10 @@ public class StickerList {
         stickerTagsDAO = new StickerTagsAccessObject(context);
     }
 
-    /*public static StickerList getInstance(){
-        if(instance == null){
-            instance = new StickerList();
-        }
-        return instance;
-    }*/
+    public StickerList(IDataAccessObject stickerDAO, IDataAccessObject stickerTagsDAO){
+        this.stickerDAO = stickerDAO;
+        this.stickerTagsDAO = stickerTagsDAO;
+    }
 
     public List<Sticker> getStickerListByCategoryId(Integer categoryId){
         List<Sticker> result = new ArrayList<>();
@@ -174,12 +171,6 @@ public class StickerList {
         catch (JSONException e){
             Log.e(this.getClass().toString(), "Error when parsing JSONArray");
         }
-        return result;
-    }
-
-    public List<Sticker> getLatestStickers(){
-        ArrayList<Sticker> result = new ArrayList<>();
-
         return result;
     }
 }

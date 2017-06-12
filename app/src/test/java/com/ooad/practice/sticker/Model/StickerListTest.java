@@ -1,27 +1,16 @@
 package com.ooad.practice.sticker.Model;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 /**
- * Created by fuyiru on 2017/5/21.
+ * Created by fuyiru on 2017/6/12.
  */
 public class StickerListTest {
     @Before
     public void setUp() throws Exception {
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
-    @Test
-    public void getInstance() throws Exception {
 
     }
 
@@ -41,27 +30,22 @@ public class StickerListTest {
     }
 
     @Test
+    public void setTagToSticker() throws Exception {
+
+    }
+
+    @Test
+    public void deleteTagFromSticker() throws Exception {
+
+    }
+
+    @Test
     public void deleteSticker() throws Exception {
 
     }
 
     @Test
     public void getEmergentList() throws Exception {
-
-    }
-
-    @Test
-    public void getLatestStickers() throws Exception {
-
-    }
-
-    @Test
-    public void calculateDate() throws Exception {
-
-    }
-
-    @Test
-    public void calculateDate1() throws Exception {
 
     }
 

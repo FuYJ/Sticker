@@ -23,7 +23,6 @@ import java.util.List;
  */
 
 public class CategoryList {
-    private static CategoryList instance;
     private IDataAccessObject categoryDAO;
 
     public CategoryList(){
@@ -33,20 +32,6 @@ public class CategoryList {
     public CategoryList(IDataAccessObject dao){
         this.categoryDAO = dao;
     }
-
-    /*public static CategoryList getInstance(){
-        if(instance == null){
-            instance = new CategoryList();
-        }
-        return instance;
-    }
-
-    public static CategoryList getInstance(IDataAccessObject dao){
-        if(instance == null){
-            instance = new CategoryList(dao);
-        }
-        return instance;
-    }*/
 
     public List<Category> getCategoryList(String keyword){
         List<Category> result = new ArrayList<>();
@@ -77,8 +62,14 @@ public class CategoryList {
     public int setCategory(Category category){
         JSONObject jObj = category.toJSONObject();
         String where = Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"";
-        if(categoryDAO.retrieveWhere(where).length() > 0)
-            return -1;
+        try{
+            JSONArray categoriesWithSameTitle = categoryDAO.retrieveWhere(where);
+            int categoryIDWithSameTitle = categoriesWithSameTitle.getJSONObject(0).getInt(IDataAccessObject.CATEGORY_ID);
+            if(categoriesWithSameTitle.length() > 0 &&  categoryIDWithSameTitle != category.getCategoryID());
+                return -1;
+        } catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
+        }
 
         if(category.getCategoryID() == 0){
             categoryDAO.create(jObj);

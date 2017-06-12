@@ -118,8 +118,9 @@
     <orderEntry type="library" exported="" name="objenesis-1.0" level="project" />
     <orderEntry type="library" exported="" name="cglib-nodep-2.2.3" level="project" />
     <orderEntry type="library" exported="" name="constraint-layout-solver-1.0.2" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javax.annotation-api-1.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.2" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="json-20140107" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javax.inject-1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="jmock-2.6.0" level="project" />
@@ -130,6 +131,5 @@
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.12" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="espresso-idling-resource-2.1" level="project" />
-    <orderEntry type="library" exported="" name="android-android-21" level="project" />
   </component>
 </module>
