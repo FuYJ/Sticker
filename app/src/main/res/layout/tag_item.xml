@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
@@ -7,46 +9,27 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:orientation="horizontal"
+        android:layout_height="50dp"
         android:layout_weight="0.00"
+        android:orientation="horizontal"
+        tools:ignore="MissingPrefix"
         android:weightSum="1">
 
-        <TextView
-            android:id="@+id/tag_color"
-            android:layout_width="50dp"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:id="@+id/tag_title"
+        <CheckBox
+            android:id="@+id/isChosen"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.95"
-            android:textSize="40sp" />
+            android:checked="true"
+            android:textAlignment="center" />
 
-        <CheckBox
-            android:id="@+id/isChoosed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/modify_tag"
+        <EditText
+            android:id="@+id/tagTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:ems="10"
+            android:inputType="textPersonName" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button" />
     </LinearLayout>
+
 </LinearLayout>

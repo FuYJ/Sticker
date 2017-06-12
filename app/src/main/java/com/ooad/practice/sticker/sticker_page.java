@@ -2,8 +2,11 @@ package com.ooad.practice.sticker;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,9 +24,12 @@ import com.ooad.practice.sticker.Bean.Sticker;
 import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Model.CategoryList;
 import com.ooad.practice.sticker.Model.StickerList;
+import com.ooad.practice.sticker.Model.TagList;
 
 import java.util.List;
 
+import Adapter.StickerAdapter;
+import Adapter.TagAdapter;
 import ColorPickerDialog.ColorPickerDialog;
 
 /**
@@ -52,6 +58,7 @@ public class sticker_page extends ActionBarActivity {
     private Category category;
     private Dialog dialog;
     private TextView[] tags;
+    private TagList tagList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,7 @@ public class sticker_page extends ActionBarActivity {
         categories.setOnItemSelectedListener(spinnerSelectedItem());
         state = (String)getIntent().getBundleExtra("Bundle").getSerializable("State");
         stickerList = new StickerList();
+        tagList = new TagList();
         table = getApplicationContext().getResources().getStringArray(R.array.sticker_state);
         title = (TextView)findViewById(R.id.stickerTitle_input);
         description = (TextView)findViewById(R.id.stickerDescription_input);
@@ -117,13 +125,14 @@ public class sticker_page extends ActionBarActivity {
         tags = new TextView[8];
         String headString = "stickerTags";
         String temp;
-//        List<Tag> tagList = sticker.getTagList();
+        List<Tag> tagList = sticker.getTagList();
         for (int i = 0; i < 2; i++) {
             temp = headString + i;
             tags[i] = (TextView) findViewById(this.getResources().getIdentifier(temp, "id", getPackageName()));
             tags[i].setBackgroundColor(0xFFFF0000);
             tags[i].setOnClickListener(tagListener());
         }
+
     }
 
     private void setUIEnable(boolean setValue){
@@ -158,7 +167,34 @@ public class sticker_page extends ActionBarActivity {
         TextView title = (TextView)dialog.findViewById(R.id.tagTitle_input);
         ListView tagList = (ListView)dialog.findViewById(R.id.tagList);
         color.setOnClickListener(colorListener(color));
+        title.setOnKeyListener(createTagLinstener(title.getText().toString(), ((ColorDrawable)color.getBackground()).getColor()));
+        showTagList();
         dialog.show();
+    }
+
+    private View.OnKeyListener createTagLinstener(final String title, final int color){
+        return new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    if(title.equals("")){
+
+                    }
+                    else{
+                        Tag temp = new Tag(0, title, Color.red(color), Color.green(color), Color.blue(color));
+                        tagList.setTag(temp);
+                    }
+                    showTagList();
+                    return true;
+                }
+                return false;
+            }
+        };
+    }
+
+    private void showTagList(){
+        Toast.makeText(this, tagList.getTagList().size() + "", Toast.LENGTH_SHORT).show();
+//        ListView tagList = (ListView)dialog.findViewById(R.id.tagList);
+//        tagList.setAdapter(new TagAdapter(sticker_page.this, sticker.getTagList()));
     }
 
     private View.OnClickListener colorListener(final TextView color){
