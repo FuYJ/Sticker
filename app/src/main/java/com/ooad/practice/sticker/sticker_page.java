@@ -26,6 +26,7 @@ import com.ooad.practice.sticker.Model.CategoryList;
 import com.ooad.practice.sticker.Model.StickerList;
 import com.ooad.practice.sticker.Model.TagList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import Adapter.StickerAdapter;
@@ -43,6 +44,7 @@ public class sticker_page extends ActionBarActivity {
     private final String DELETE = "刪除";
     private final String CANCEL = "取消";
     private final String CONFIRM = "確認";
+    private int UI_vis[] = {View.INVISIBLE,View.VISIBLE};
     private StickerList stickerList;
     private List<Category> categoryList;
     private Spinner categories;
@@ -59,6 +61,7 @@ public class sticker_page extends ActionBarActivity {
     private Dialog dialog;
     private TextView[] tags;
     private TagList tagList;
+    private List<Tag> stickerTagList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +84,10 @@ public class sticker_page extends ActionBarActivity {
         left.setOnClickListener(leftButtonListener());
         right = (Button)findViewById(R.id.rightButton);
         right.setOnClickListener(rightButtonListener());
+        if(sticker != null)
+            stickerTagList = sticker.getTagList();
+        else
+            stickerTagList = new ArrayList<>();
         handleTags();
         updateView();
     }
@@ -122,17 +129,35 @@ public class sticker_page extends ActionBarActivity {
     }
 
     private void handleTags(){
+        int index;
         tags = new TextView[8];
         String headString = "stickerTags";
         String temp;
-        List<Tag> tagList = sticker.getTagList();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 8; i++) {
             temp = headString + i;
             tags[i] = (TextView) findViewById(this.getResources().getIdentifier(temp, "id", getPackageName()));
-            tags[i].setBackgroundColor(0xFFFF0000);
             tags[i].setOnClickListener(tagListener());
+            tags[i].setText("");
         }
 
+        for(index = 0; index < stickerTagList.size(); index++){
+            tags[index].setEnabled(true);
+            tags[index].setVisibility(UI_vis[1]);
+            List<Integer> color = stickerTagList.get(index).getColor();
+            tags[index].setBackgroundColor(android.graphics.Color.argb(255, color.get(0), color.get(1), color.get(2)));
+        }
+        if(index < 8){
+            tags[index].setEnabled(true);
+            tags[index].setVisibility(UI_vis[1]);
+            tags[index].setBackgroundColor(0xFFFFFFFF);
+            tags[index].setText("+");
+            index++;
+        }
+
+        for(index = index; index < 8; index++){
+            tags[index].setEnabled(false);
+            tags[index].setVisibility(UI_vis[0]);
+        }
     }
 
     private void setUIEnable(boolean setValue){
@@ -153,34 +178,37 @@ public class sticker_page extends ActionBarActivity {
     private View.OnClickListener tagListener(){
         return new View.OnClickListener() {
             public void onClick(View v) {
-                final TextView t = (TextView)findViewById(v.getId());
-                showTagDialog(t);
+                showTagDialog(v.getId());
             }
         };
     }
 
-    private void showTagDialog(TextView text){
+    private void showTagDialog(int textID){
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.popup_tag);
         dialog.setTitle("Tags");
         TextView color = (TextView)dialog.findViewById(R.id.tagColor_inpput);
         TextView title = (TextView)dialog.findViewById(R.id.tagTitle_input);
-        ListView tagList = (ListView)dialog.findViewById(R.id.tagList);
         color.setOnClickListener(colorListener(color));
-        title.setOnKeyListener(createTagLinstener(title.getText().toString(), ((ColorDrawable)color.getBackground()).getColor()));
+        title.setOnKeyListener(createTagLinstener());
         showTagList();
+        ListView tagList = (ListView)dialog.findViewById(R.id.tagList);
+        tagList.setOnItemClickListener(listItemListener(textID));
         dialog.show();
     }
 
-    private View.OnKeyListener createTagLinstener(final String title, final int color){
+    private View.OnKeyListener createTagLinstener(){
         return new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    if(title.equals("")){
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    TextView color = (TextView)dialog.findViewById(R.id.tagColor_inpput);
+                    TextView title = (TextView)dialog.findViewById(R.id.tagTitle_input);
+                    if(title.getText().toString().equals("")){
 
                     }
                     else{
-                        Tag temp = new Tag(0, title, Color.red(color), Color.green(color), Color.blue(color));
+                        ColorDrawable cd = (ColorDrawable) color.getBackground();
+                        Tag temp = new Tag(0, title.getText().toString(), Color.red(cd.getColor()), Color.green(cd.getColor()), Color.blue(cd.getColor()));
                         tagList.setTag(temp);
                     }
                     showTagList();
@@ -191,10 +219,44 @@ public class sticker_page extends ActionBarActivity {
         };
     }
 
-    private void showTagList(){
-        Toast.makeText(this, tagList.getTagList().size() + "", Toast.LENGTH_SHORT).show();
-//        ListView tagList = (ListView)dialog.findViewById(R.id.tagList);
-//        tagList.setAdapter(new TagAdapter(sticker_page.this, sticker.getTagList()));
+    private AdapterView.OnItemClickListener listItemListener(final int textID){
+        return new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView parent, View view, int position, long id){
+                Toast.makeText(view.getContext(), "Test", Toast.LENGTH_SHORT).show();
+                TextView text = (TextView)findViewById(textID);
+                List<Tag> allTagList = tagList.getTagList();
+                if(text.getText().toString().equals("+")){
+                    if(checkChosen(allTagList.get(position).getTagID())){
+                        List<Integer> color = allTagList.get(position).getColor();
+                        text.setBackgroundColor(android.graphics.Color.argb(255, color.get(0), color.get(1), color.get(2)));
+                        stickerTagList.add(allTagList.get(position));
+//                        handleTags();
+                        dialog.dismiss();
+                    }
+                    else{
+                        Toast.makeText(view.getContext(), "已經選擇過了", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+
+                }
+            }
+        };
+    }
+
+    private boolean checkChosen(int id){
+        for(int i = 0; i < stickerTagList.size(); i++){
+            if(stickerTagList.get(i).getTagID() == id){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void showTagList(){
+        ListView tagList = (ListView)dialog.findViewById(R.id.tagList);
+        tagList.setAdapter(new TagAdapter(sticker_page.this, stickerTagList));
     }
 
     private View.OnClickListener colorListener(final TextView color){
