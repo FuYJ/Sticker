@@ -151,7 +151,7 @@ public class sticker_page extends ActionBarActivity {
             tags[i].setOnClickListener(tagListener(this.getResources().getIdentifier(temp, "id", getPackageName())));
             tags[i].setText("");
         }
-
+        Toast.makeText(this, stickerTagList.size() + "", Toast.LENGTH_LONG).show();
         for(index = 0; index < stickerTagList.size(); index++){
             tags[index].setEnabled(true);
             tags[index].setVisibility(UI_vis[1]);
@@ -364,6 +364,7 @@ public class sticker_page extends ActionBarActivity {
         Sticker temp = new Sticker(0, category.getCategoryID(), title.getText().toString(),
                 description.getText().toString(), deadline.getText().toString(),
                 remind.getText().toString(), isFinished.isChecked());
+        temp.setTagList(stickerTagList);
         stickerList.setSticker(temp);
         this.finish();
     }
@@ -373,6 +374,8 @@ public class sticker_page extends ActionBarActivity {
                 description.getText().toString(), deadline.getText().toString(),
                 remind.getText().toString(), isFinished.isChecked());
         stickerList.setSticker(sticker);
+        for(int i = 0; i < stickerTagList.size(); i++)
+            stickerList.setTagToSticker(sticker, stickerTagList.get(i));
     }
 
     private void deleteSticker(){

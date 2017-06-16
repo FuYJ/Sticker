@@ -55,11 +55,92 @@
         android:layout_alignParentStart="true" />
 
     <TableRow
-        android:id="@+id/sticker_tags"
+        android:id="@+id/stickerTagRow"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/sticker_deadline"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/sticker_deadline" />
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/stickerTags0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:tag="0"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/stickerTags1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:tag="1"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/stickerTags2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:tag="2"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/stickerTags3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:tag="3"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/stickerTags4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:tag="4"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/stickerTags5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:tag="5"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/stickerTags6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:tag="6"
+            android:textSize="45sp" />
+
+        <TextView
+            android:id="@+id/stickerTags7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:tag="7"
+            android:textSize="45sp" />
+    </TableRow>
 
 </RelativeLayout>
