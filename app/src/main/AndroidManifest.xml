@@ -28,7 +28,7 @@
         <service android:name=".Model.Reminder">
             <intent-filter>
                 <action android:name="com.ooad.practice.START_REMINDER" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </service>
     </application>

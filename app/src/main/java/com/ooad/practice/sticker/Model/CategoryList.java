@@ -39,6 +39,12 @@ public class CategoryList {
         this.stickerDAO = stickerDAO;
     }
 
+    public Category getCategoryByCategoryId(Integer categoryID){
+        JSONObject jObj = categoryDAO.retrieveOne(categoryID);
+        Category result = new Category(jObj);
+        return result;
+    }
+
     public List<Category> getCategoryList(String keyword){
         List<Category> result = new ArrayList<>();
         JSONArray jArr;
