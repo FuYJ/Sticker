@@ -47,19 +47,25 @@ public class TagAdapter extends BaseAdapter {
     private boolean[] isChosen;
     private Context context;
     private Dialog dialog;
+    private int[] isVisible;
+    private int offset;
+    private int tagIndex;
 
-    public TagAdapter(Context c, List<Tag> stickerTagList){
+    public TagAdapter(Context c, List<Tag> stickerTagList, int offset){
         inflater = LayoutInflater.from(c);
         this.stickerTagList = stickerTagList;
         this.tag = new TagList();
         tagList = tag.getTagList();
         this.context = c;
+        this.offset = offset;
+        this.tagIndex = tagIndex;
         checkChosen();
+        chekUIVisible();
     }
 
     @Override
     public int getCount() {
-        return tagList.size();
+        return tagList.size() + offset;
     }
 
     @Override
@@ -75,7 +81,6 @@ public class TagAdapter extends BaseAdapter {
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.tag_item,viewGroup,false);
-        List<Integer> color = tagList.get(i).getColor();
         Button remove;
         CheckBox chosen;
         TextView title;
@@ -84,13 +89,18 @@ public class TagAdapter extends BaseAdapter {
         chosen = (CheckBox)view.findViewById(R.id.isChosen);
         title = (TextView)view.findViewById(R.id.tagTitle);
         edit = (ImageButton)view.findViewById(R.id.editTag);
-        remove.setVisibility(UI_vis[0]);
-        chosen.setBackgroundColor(android.graphics.Color.argb(255, color.get(0), color.get(1), color.get(2)));
+        if(i - offset >= 0){
+            List<Integer> color = tagList.get(i - offset).getColor();
+            chosen.setBackgroundColor(android.graphics.Color.argb(255, color.get(0), color.get(1), color.get(2)));
+            title.setText(tagList.get(i - offset).getTitle());
+            edit.setOnClickListener(editButtonListener(i - offset));
+        }
+        remove.setVisibility(UI_vis[(isVisible[i] + 1) % 2]);
+        chosen.setVisibility(UI_vis[isVisible[i]]);
+        title.setVisibility(UI_vis[isVisible[i]]);
+        edit.setVisibility(UI_vis[isVisible[i]]);
         chosen.setChecked(isChosen[i]);
         chosen.setEnabled(false);
-        title.setText(tagList.get(i).getTitle());
-        title.setEnabled(false);
-        edit.setOnClickListener(editButtonListener(i));
         return view;
     }
 
@@ -157,18 +167,28 @@ public class TagAdapter extends BaseAdapter {
         };
     }
 
+    private void chekUIVisible(){
+        isVisible = new int[tagList.size() + offset];
+        for(int i = 0; i < tagList.size() + offset; i++){
+            isVisible[i] = 0;
+        }
+        for(int i = offset; i < tagList.size() + offset; i++){
+            isVisible[i] = 1;
+        }
+    }
+
     private void checkChosen(){
         int id = 0;
-        isChosen = new boolean[tagList.size()];
-        for(int i = 0; i < tagList.size(); i++){
+        isChosen = new boolean[tagList.size() + offset];
+        for(int i = 0; i < tagList.size() + offset; i++){
             isChosen[i] = false;
         }
 
-        for(int i = 0; i < stickerTagList.size(); i+=0){
+        for(int i = 0; i < stickerTagList.size(); i++){
             id = stickerTagList.get(i).getTagID();
             for(int j = 0; j < tagList.size(); j++){
                 if(id == tagList.get(j).getTagID()){
-                    isChosen[i] = true;
+                    isChosen[j + offset] = true;
                 }
             }
         }
