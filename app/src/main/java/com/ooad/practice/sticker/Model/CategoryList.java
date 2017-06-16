@@ -1,6 +1,7 @@
 package com.ooad.practice.sticker.Model;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
@@ -9,6 +10,7 @@ import com.ooad.practice.sticker.Database.CategoryAccessObject;
 import com.ooad.practice.sticker.Database.Database;
 import com.ooad.practice.sticker.Database.IDataAccessObject;
 import com.ooad.practice.sticker.Database.IDatabase;
+import com.ooad.practice.sticker.Database.StickerAccessObject;
 import com.ooad.practice.sticker.MainApplication;
 
 import org.json.JSONArray;
@@ -24,13 +26,17 @@ import java.util.List;
 
 public class CategoryList {
     private IDataAccessObject categoryDAO;
+    private IDataAccessObject stickerDAO;
 
     public CategoryList(){
-        categoryDAO = new CategoryAccessObject(MainApplication.getContext());
+        Context context = MainApplication.getContext();
+        categoryDAO = new CategoryAccessObject(context);
+        stickerDAO = new StickerAccessObject(context);
     }
 
-    public CategoryList(IDataAccessObject dao){
-        this.categoryDAO = dao;
+    public CategoryList(IDataAccessObject categoryDAO, IDataAccessObject stickerDAO){
+        this.categoryDAO = categoryDAO;
+        this.stickerDAO = stickerDAO;
     }
 
     public List<Category> getCategoryList(String keyword){
@@ -82,5 +88,6 @@ public class CategoryList {
 
     public void deleteCategory(Category category) {
         categoryDAO.deleteOne(category.getCategoryID());
+        stickerDAO.deleteWhere(IDataAccessObject.STICKER_CATEGORY_ID + " = " + category.getCategoryID());
     }
 }

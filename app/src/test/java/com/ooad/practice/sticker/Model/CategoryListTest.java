@@ -18,8 +18,10 @@ import static org.junit.Assert.*;
  * Created by fuyiru on 2017/5/21.
  */
 public class CategoryListTest {
-    Mockery context = new Mockery();
-    IDataAccessObject dao = context.mock(IDataAccessObject.class);
+    Mockery context1 = new Mockery();
+    IDataAccessObject categoryDAO = context1.mock(IDataAccessObject.class);
+    Mockery context2 = new Mockery();
+    IDataAccessObject stickerDAO = context2.mock(IDataAccessObject.class);
     CategoryList categoryList;
     JSONArray fakeCategoryListData1;
     String fakeCategoryListData1_str = "[" +
@@ -38,7 +40,7 @@ public class CategoryListTest {
 
     @Before
     public void setUp() throws Exception {
-        categoryList = new CategoryList(dao);
+        categoryList = new CategoryList(categoryDAO, stickerDAO);
 
         //fakeCategoryListData
         fakeCategoryListData1 = new JSONArray(fakeCategoryListData1_str);
@@ -51,12 +53,12 @@ public class CategoryListTest {
 
     @Test
     public void getCategoryList() throws Exception {
-        context.checking(new Expectations(){{
-            oneOf(dao).retrieveAll();
+        context1.checking(new Expectations(){{
+            oneOf(categoryDAO).retrieveAll();
             will(returnValue(fakeCategoryListData1));
         }});
         List<Category> result = categoryList.getCategoryList(null);
-        context.assertIsSatisfied();
+        context1.assertIsSatisfied();
         int num = result.size();
         assertEquals(3, num);
         assertEquals(1, (int)result.get(0).getCategoryID());
@@ -64,50 +66,53 @@ public class CategoryListTest {
 
     @Test
     public void setCategory_Fail_TitleRepeated() throws Exception {
-        context.checking(new Expectations(){{
-            oneOf(dao).retrieveWhere(IDataAccessObject.CATEGORY_TITLE + " = \"1\"");
+        context1.checking(new Expectations(){{
+            oneOf(categoryDAO).retrieveWhere(IDataAccessObject.CATEGORY_TITLE + " = \"1\"");
             will(returnValue(fakeCategoryListData2));
         }});
 
         int result = categoryList.setCategory(new Category(0, "1", "1"));
-        context.assertIsSatisfied();
+        context1.assertIsSatisfied();
         assertEquals(-1, result);
     }
 
     @Test
     public void setCategory_Success_Create() throws Exception {
-        context.checking(new Expectations(){{
-            oneOf(dao).retrieveWhere(IDataAccessObject.CATEGORY_TITLE + " = \"4\"");
+        context1.checking(new Expectations(){{
+            oneOf(categoryDAO).retrieveWhere(IDataAccessObject.CATEGORY_TITLE + " = \"4\"");
             will(returnValue(new JSONArray()));
-            oneOf(dao).create(with(any(JSONObject.class)));
+            oneOf(categoryDAO).create(with(any(JSONObject.class)));
         }});
 
         int result = categoryList.setCategory(new Category(0, "4", "4"));
-        context.assertIsSatisfied();
+        context1.assertIsSatisfied();
         assertEquals(0, result);
     }
 
     @Test
     public void setCategory_Success_Edit() throws Exception {
-        context.checking(new Expectations(){{
-            oneOf(dao).retrieveWhere(IDataAccessObject.CATEGORY_TITLE + " = \"4\"");
+        context1.checking(new Expectations(){{
+            oneOf(categoryDAO).retrieveWhere(IDataAccessObject.CATEGORY_TITLE + " = \"4\"");
             will(returnValue(new JSONArray()));
-            oneOf(dao).updateOne(with(1), with(any(JSONObject.class)));
+            oneOf(categoryDAO).updateOne(with(1), with(any(JSONObject.class)));
         }});
 
         int result = categoryList.setCategory(new Category(1, "4", "4"));
-        context.assertIsSatisfied();
+        context1.assertIsSatisfied();
         assertEquals(0, result);
     }
 
     @Test
     public void deleteCategory() throws Exception {
-        context.checking(new Expectations(){{
-            oneOf(dao).deleteOne(with(any(int.class)));
+        context1.checking(new Expectations(){{
+            oneOf(categoryDAO).deleteOne(with(any(int.class)));
+        }});
+        context2.checking(new Expectations(){{
+            oneOf(stickerDAO).deleteWhere(with(any(String.class)));
         }});
 
         categoryList.deleteCategory(new Category(1, "4", "4"));
-        context.assertIsSatisfied();
+        context1.assertIsSatisfied();
     }
 
 }
