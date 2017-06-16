@@ -61,26 +61,31 @@ public class sticker_page extends ActionBarActivity {
     private String state;
     private Sticker sticker;
     private Category category;
+    private CategoryList categoryController;
     private Dialog dialog;
     private TextView[] tags;
     private TagList tagList;
     private List<Tag> stickerTagList;
     private int selectedTagID;
-    private int stickerIndex;
+    private int stickerID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker);
         category = (Category)getIntent().getBundleExtra("Bundle").getSerializable("Category");
-        sticker = (Sticker)getIntent().getBundleExtra("Bundle").getSerializable("Sticker");
-//        stickerIndex = (int)getIntent().getBundleExtra("Bundle").getSerializable("Index");
         categories = (Spinner)findViewById(R.id.categoryList);
         categories.setOnItemSelectedListener(spinnerSelectedItem());
         state = (String)getIntent().getBundleExtra("Bundle").getSerializable("State");
         stickerList = new StickerList();
         tagList = new TagList();
-//        sticker = stickerList.getStickerListByCategoryId(category.getCategoryID()).get(stickerIndex);
+        categoryController = new CategoryList();
+        category = categoryController.getCategoryByCategoryId((int)getIntent().getBundleExtra("Bundle").getSerializable("CategoryID"));
+        stickerID = (int)getIntent().getBundleExtra("Bundle").getSerializable("StickerID");
+        if(stickerID > 0)
+            sticker = stickerList.getStickerByStickerId(stickerID);
+        else
+            sticker = null;
         table = getApplicationContext().getResources().getStringArray(R.array.sticker_state);
         title = (TextView)findViewById(R.id.stickerTitle_input);
         description = (TextView)findViewById(R.id.stickerDescription_input);

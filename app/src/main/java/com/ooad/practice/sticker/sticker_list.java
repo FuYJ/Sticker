@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.ooad.practice.sticker.Bean.Category;
 import com.ooad.practice.sticker.Bean.Sticker;
+import com.ooad.practice.sticker.Model.CategoryList;
 import com.ooad.practice.sticker.Model.StickerList;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class sticker_list extends ActionBarActivity {
     private Button settingButton;
     private EditText searchInput;
     private StickerList sticker;
+    private CategoryList categoryList;
     private int isVisible = 0;
     private String keyword;
     private int length;
@@ -36,7 +38,8 @@ public class sticker_list extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker_list);
-        category = (Category)getIntent().getBundleExtra("Bundle").getSerializable("Category");
+        categoryList = new CategoryList();
+        category = categoryList.getCategoryByCategoryId((int)getIntent().getBundleExtra("Bundle").getSerializable("CategoryID"));
         setTitle(category.getTitle());
 
         settingButton = (Button)findViewById(R.id.setting);
@@ -91,9 +94,8 @@ public class sticker_list extends ActionBarActivity {
                 if(position > 0){
                     Intent intent = new Intent(sticker_list.this, sticker_page.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("Category", category);
-                    bundle.putSerializable("Sticker", stickerList.get(position - 1));
-//                    bundle.putInt("Index", position - 1);
+                    bundle.putInt("CategoryID", category.getCategoryID());
+                    bundle.putInt("StickerID", stickerList.get(position - 1).getStickerID());
                     bundle.putString("State", getApplicationContext().getResources().getStringArray(R.array.sticker_state)[2]);
                     intent.putExtra("Bundle", bundle);
                     startActivity(intent);

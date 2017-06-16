@@ -98,8 +98,8 @@ public class StickerAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(context, sticker_page.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("Category", category);
-                bundle.putSerializable("Sticker", null);
+                bundle.putInt("CategoryID", category.getCategoryID());
+                bundle.putInt("StickerID", -1);
                 bundle.putString("State", context.getResources().getStringArray(R.array.sticker_state)[0]);
                 intent.putExtra("Bundle", bundle);
                 context.startActivity(intent);

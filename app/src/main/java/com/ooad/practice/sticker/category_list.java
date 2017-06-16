@@ -106,7 +106,7 @@ public class category_list extends ActionBarActivity {
                 if(position > 0){
                     Intent intent = new Intent(category_list.this, sticker_list.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("Category", categoryList.get(position - 1));
+                    bundle.putInt("CategoryID", categoryList.get(position - 1).getCategoryID());
                     intent.putExtra("Bundle", bundle);
                     startActivity(intent);
                 }
