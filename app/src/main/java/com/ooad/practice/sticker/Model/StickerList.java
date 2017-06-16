@@ -134,19 +134,21 @@ public class StickerList {
         return where;
     }
 
-    public void setSticker(Sticker sticker){
+    public Integer setSticker(Sticker sticker){
+        Integer stickerID = 0;
         JSONObject jObj = sticker.toJSONObject();
         if(sticker.getStickerID() == 0)
-            stickerDAO.create(jObj);
+            stickerID = stickerDAO.create(jObj);
         else
-            stickerDAO.updateOne(sticker.getCategoryID(), jObj);
+            stickerDAO.updateOne(sticker.getStickerID(), jObj);
+        return stickerID;
     }
 
     public void setTagToSticker(Sticker sticker, Tag tag){
         JSONObject jObj = new JSONObject();
         try{
-            jObj.put("\"" + IDataAccessObject.STICKER_TAGS_STICKER_ID + "\"", sticker.getStickerID());
-            jObj.put("\"" + IDataAccessObject.STICKER_TAGS_TAG_ID + "\"", tag.getTagID());
+            jObj.put(IDataAccessObject.STICKER_TAGS_STICKER_ID, sticker.getStickerID());
+            jObj.put(IDataAccessObject.STICKER_TAGS_TAG_ID, tag.getTagID());
         }
         catch (JSONException e){
             Log.e(this.getClass().toString(), e.getMessage());

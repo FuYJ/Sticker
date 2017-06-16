@@ -36,9 +36,10 @@ public class StickerAccessObject implements IDataAccessObject {
     }
 
     @Override
-    public void create(JSONObject cols) {
+    public Integer create(JSONObject cols) {
         ContentValues cv = convertJSONObjectToContentValues(cols);
-        db.insert(tableName, null, cv);
+        Long id = db.insert(tableName, null, cv);
+        return id.intValue();
     }
 
     @Override

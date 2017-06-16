@@ -87,7 +87,7 @@ public interface IDataAccessObject {
 
     void close();
 
-    void create(JSONObject cols);
+    Integer create(JSONObject cols);
 
     void updateWhere(String where, JSONObject cols);
 
