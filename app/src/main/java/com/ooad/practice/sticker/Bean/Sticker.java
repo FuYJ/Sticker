@@ -32,18 +32,21 @@ public class Sticker implements Serializable {
     private String remindTime;
     private List<Tag> tagList;
     private Boolean isFinished;
+    private SharedPreferences sharedPreferences;
 
-    public Sticker(Integer stickerID, Integer categoryID, String title, String description, Long deadline, Long remindTime, Boolean isFinished){
+    public Sticker(Integer stickerID, Integer categoryID, String title, String description, String deadline, String remindTime, Boolean isFinished){
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());
         this.stickerID = stickerID;
         this.categoryID = categoryID;
         this.title = title;
         this.description = description;
-        this.deadline = calculateDate(deadline);
-        this.remindTime = calculateDate(remindTime);
+        this.deadline = deadline;
+        this.remindTime = remindTime;
         this.isFinished = isFinished;
     }
 
-    public Sticker(Integer stickerID, Integer categoryID, String title, String description, String deadline, String remindTime, Boolean isFinished){
+    public Sticker(Integer stickerID, Integer categoryID, String title, String description, String deadline, String remindTime, Boolean isFinished, SharedPreferences sharedPreferences){
+        this.sharedPreferences = sharedPreferences;
         this.stickerID = stickerID;
         this.categoryID = categoryID;
         this.title = title;
@@ -55,6 +58,23 @@ public class Sticker implements Serializable {
 
     public Sticker(JSONObject jObj){
         try {
+            this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());
+            this.stickerID = jObj.getInt(IDataAccessObject.STICKER_ID);
+            this.categoryID = jObj.getInt(IDataAccessObject.STICKER_CATEGORY_ID);
+            this.title = jObj.getString(IDataAccessObject.STICKER_TITLE);
+            this.description = jObj.getString(IDataAccessObject.STICKER_DESCRIPTION);
+            this.deadline = calculateDate(jObj.getLong(IDataAccessObject.STICKER_DEADLINE));
+            this.remindTime = calculateDate(jObj.getLong(IDataAccessObject.STICKER_REMIND_TIME));
+            this.isFinished = jObj.getBoolean(IDataAccessObject.STICKER_IS_FINISHED);
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), e.getMessage());
+        }
+    }
+
+    public Sticker(JSONObject jObj, SharedPreferences sharedPreferences){
+        try {
+            this.sharedPreferences = sharedPreferences;
             this.stickerID = jObj.getInt(IDataAccessObject.STICKER_ID);
             this.categoryID = jObj.getInt(IDataAccessObject.STICKER_CATEGORY_ID);
             this.title = jObj.getString(IDataAccessObject.STICKER_TITLE);
@@ -125,7 +145,17 @@ public class Sticker implements Serializable {
     public String calculateDate(Long date){
         String formattedDate;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-        formattedDate = sdf.format(date);
+        formattedDate = "";
+        Calendar calendar = Calendar.getInstance();
+        if(sharedPreferences.getString("@string/calendars", "西元曆").equals("國曆")){
+            calendar.setTimeInMillis(date);
+            calendar.add(Calendar.YEAR, -1911);
+            date = calendar.getTime().getTime();
+            formattedDate = sdf.format(date);
+        }
+        else{
+            formattedDate = sdf.format(date);
+        }
         return formattedDate;
     }
 
@@ -133,12 +163,12 @@ public class Sticker implements Serializable {
         Long dateTime = 0L;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         try {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());
             Calendar calendar = Calendar.getInstance();
             dateTime = sdf.parse(date).getTime();
             if(sharedPreferences.getString("@string/calendars", "西元曆").equals("國曆")){
                 calendar.setTimeInMillis(dateTime);
-                calendar.add(Calendar.YEAR, -1911);
+                calendar.add(Calendar.YEAR, 1911);
+                dateTime = calendar.getTime().getTime();
             }
         } catch (ParseException e) {
             e.printStackTrace();

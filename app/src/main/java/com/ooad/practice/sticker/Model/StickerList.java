@@ -1,16 +1,21 @@
 package com.ooad.practice.sticker.Model;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ooad.practice.sticker.Bean.Sticker;
 import com.ooad.practice.sticker.Bean.Tag;
-import com.ooad.practice.sticker.Database.Database;
 import com.ooad.practice.sticker.Database.IDataAccessObject;
 import com.ooad.practice.sticker.Database.StickerAccessObject;
 import com.ooad.practice.sticker.Database.StickerTagsAccessObject;
+import com.ooad.practice.sticker.MainActivity;
 import com.ooad.practice.sticker.MainApplication;
 
 import org.json.JSONArray;
@@ -25,22 +30,22 @@ import java.util.List;
  */
 
 public class StickerList {
-    private static StickerList instance;
     private IDataAccessObject stickerDAO;
     private IDataAccessObject stickerTagsDAO;
+    private SharedPreferences sharedPreferences;
 
     public StickerList(){
         Context context = MainApplication.getContext();
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         stickerDAO = new StickerAccessObject(context);
         stickerTagsDAO = new StickerTagsAccessObject(context);
     }
 
-    /*public static StickerList getInstance(){
-        if(instance == null){
-            instance = new StickerList();
-        }
-        return instance;
-    }*/
+    public StickerList(IDataAccessObject stickerDAO, IDataAccessObject stickerTagsDAO, SharedPreferences sharedPreferences){
+        this.sharedPreferences = sharedPreferences;
+        this.stickerDAO = stickerDAO;
+        this.stickerTagsDAO = stickerTagsDAO;
+    }
 
     public List<Sticker> getStickerListByCategoryId(Integer categoryId){
         List<Sticker> result = new ArrayList<>();
@@ -61,7 +66,7 @@ public class StickerList {
         return result;
     }
 
-    public List<Sticker> getStickerList(String keyword, List<Database.SearchTarget> searchTarget, Database.SearchIsFinished searchIsFinished){
+    public List<Sticker> getStickerList(String keyword, List<IDataAccessObject.SearchTarget> searchTarget, IDataAccessObject.SearchIsFinished searchIsFinished){
         List<Sticker> result = new ArrayList<>();
         String where = "";
         where = addWhereConstraintsAccordingToSearchTarget(where, keyword, searchTarget);
@@ -82,44 +87,44 @@ public class StickerList {
         return result;
     }
 
-    private String addWhereConstraintsAccordingToSearchTarget(String where, String keyword, List<Database.SearchTarget> searchTarget){
-        for(Database.SearchTarget st : searchTarget){
+    private String addWhereConstraintsAccordingToSearchTarget(String where, String keyword, List<IDataAccessObject.SearchTarget> searchTarget){
+        for(IDataAccessObject.SearchTarget st : searchTarget){
             switch(st){
                 case STICKER:
                     if(where == "")
-                        where += Database.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
                     else
-                        where += "AND" + Database.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += "AND" + IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
                     break;
                 case CATEGORY:
                     if(where == "")
-                        where += Database.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += IDataAccessObject.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
                     else
-                        where += "AND" + Database.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += "AND" + IDataAccessObject.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
                     break;
                 case TAG:
                     if(where == "")
-                        where += Database.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
                     else
-                        where += "AND" + Database.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += "AND" + IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
                     break;
             }
         }
         return where;
     }
 
-    private String addWhereConstraintsAccordingToSearchIsFinished(String where, Database.SearchIsFinished searchIsFinished){
-        if(searchIsFinished == Database.SearchIsFinished.FINISHED){
+    private String addWhereConstraintsAccordingToSearchIsFinished(String where, IDataAccessObject.SearchIsFinished searchIsFinished){
+        if(searchIsFinished == IDataAccessObject.SearchIsFinished.FINISHED){
             if(where == "")
-                where += Database.STICKER_IS_FINISHED + " = " + String.valueOf(Database.SearchIsFinished.FINISHED.ordinal());
+                where += IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
             else
-                where += "AND" + Database.STICKER_IS_FINISHED + " = " + String.valueOf(Database.SearchIsFinished.FINISHED.ordinal());
+                where += "AND" + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
         }
         else{
             if(where == "")
-                where += Database.STICKER_IS_FINISHED + " = " + String.valueOf(Database.SearchIsFinished.UNFINISHED.ordinal());
+                where += IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
             else
-                where += "AND" + Database.STICKER_IS_FINISHED + " = " + String.valueOf(Database.SearchIsFinished.UNFINISHED.ordinal());
+                where += "AND" + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
         }
         return where;
     }
@@ -145,8 +150,8 @@ public class StickerList {
     }
 
     public void deleteTagFromSticker(Sticker sticker, Tag tag){
-        String where = Database.STICKER_TAGS_STICKER_ID + " = \"" + sticker.getStickerID().toString() + "\" AND"
-                + Database.STICKER_TAGS_TAG_ID + " = \"" + tag.getTagID().toString() + "\"";
+        String where = IDataAccessObject.STICKER_TAGS_STICKER_ID + " = \"" + sticker.getStickerID().toString() + "\" AND"
+                + IDataAccessObject.STICKER_TAGS_TAG_ID + " = \"" + tag.getTagID().toString() + "\"";
         JSONArray jArr = stickerTagsDAO.retrieveWhere(where);
         int count = jArr.length();
         if(count > 0){
@@ -158,9 +163,9 @@ public class StickerList {
         stickerDAO.deleteOne(sticker.getStickerID());
     }
 
-    public List<Sticker> getEmergentList(){
+    public List<Sticker> getRemindList(){
         List<Sticker> result = new ArrayList<>();
-        String where = Database.STICKER_REMIND_TIME + " < " + System.currentTimeMillis();
+        String where = IDataAccessObject.STICKER_REMIND_TIME + " > " + System.currentTimeMillis() + " AND " + IDataAccessObject.STICKER_IS_FINISHED + " = 0";
         JSONArray jArr = stickerDAO.retrieveWhere(where);
         try {
             for(int i = 0; i < jArr.length(); i++){
@@ -177,9 +182,22 @@ public class StickerList {
         return result;
     }
 
-    public List<Sticker> getLatestStickers(){
-        ArrayList<Sticker> result = new ArrayList<>();
-
+    public List<Sticker> getEmergentList(){
+        List<Sticker> result = new ArrayList<>();
+        String where = IDataAccessObject.STICKER_REMIND_TIME + " < " + System.currentTimeMillis() + " AND " + IDataAccessObject.STICKER_IS_FINISHED + " = 0";
+        JSONArray jArr = stickerDAO.retrieveWhere(where);
+        try {
+            for(int i = 0; i < jArr.length(); i++){
+                JSONObject jObj = jArr.getJSONObject(i);
+                Sticker sticker = new Sticker(jObj);
+                List<Tag> tagList = new TagList().getTagListByStickerId(sticker.getStickerID());
+                sticker.setTagList(tagList);
+                result.add(sticker);
+            }
+        }
+        catch (JSONException e){
+            Log.e(this.getClass().toString(), "Error when parsing JSONArray");
+        }
         return result;
     }
 }

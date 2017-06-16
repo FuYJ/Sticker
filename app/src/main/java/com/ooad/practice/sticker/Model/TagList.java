@@ -25,8 +25,6 @@ import java.util.List;
  */
 
 public class TagList {
-    private static TagList instance;
-    //private IDatabase db;
     private IDataAccessObject tagDAO;
     private IDataAccessObject stickerTagsDAO;
 
@@ -36,12 +34,10 @@ public class TagList {
         stickerTagsDAO = new StickerTagsAccessObject(context);
     }
 
-    /*public static TagList getInstance(){
-        if(instance == null){
-            instance = new TagList();
-        }
-        return instance;
-    }*/
+    public TagList(IDataAccessObject tagDAO, IDataAccessObject stickerTagsDAO) {
+        this.tagDAO = tagDAO;
+        this.stickerTagsDAO = stickerTagsDAO;
+    }
 
     public List<Tag> getTagListByStickerId(Integer stickerId){
         List<Tag> result = new ArrayList<>();
