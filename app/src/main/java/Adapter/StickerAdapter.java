@@ -85,6 +85,7 @@ public class StickerAdapter extends BaseAdapter {
         if(i > 0){
             title.setText(stickerList.get(i - 1).getTitle());
             description.setText(stickerList.get(i - 1).getDeadline());
+            handleTags(view, i);
         }
         createButton.setVisibility(UI_vis[isCreateButtonVisible[i]]);
         createButton.setOnClickListener(createListener());
@@ -95,7 +96,6 @@ public class StickerAdapter extends BaseAdapter {
         deleteButton.setOnClickListener(deleteListener(i));
         editButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
         editButton.setOnClickListener(editListener(i));
-//        handleTags(view, i);
         return view;
     }
 
