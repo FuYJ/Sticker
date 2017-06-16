@@ -93,6 +93,7 @@ public class sticker_list extends ActionBarActivity {
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Category", category);
                     bundle.putSerializable("Sticker", stickerList.get(position - 1));
+//                    bundle.putInt("Index", position - 1);
                     bundle.putString("State", getApplicationContext().getResources().getStringArray(R.array.sticker_state)[2]);
                     intent.putExtra("Bundle", bundle);
                     startActivity(intent);

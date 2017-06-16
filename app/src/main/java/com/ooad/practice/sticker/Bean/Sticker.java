@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 public class Sticker implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 876323262645176354L;
     private Integer stickerID;
     private Integer categoryID;
     private String title;

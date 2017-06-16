@@ -65,6 +65,7 @@ public class sticker_page extends ActionBarActivity {
     private TagList tagList;
     private List<Tag> stickerTagList;
     private int selectedTagID;
+    private int stickerIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +73,13 @@ public class sticker_page extends ActionBarActivity {
         setContentView(R.layout.activity_sticker);
         category = (Category)getIntent().getBundleExtra("Bundle").getSerializable("Category");
         sticker = (Sticker)getIntent().getBundleExtra("Bundle").getSerializable("Sticker");
+//        stickerIndex = (int)getIntent().getBundleExtra("Bundle").getSerializable("Index");
         categories = (Spinner)findViewById(R.id.categoryList);
         categories.setOnItemSelectedListener(spinnerSelectedItem());
         state = (String)getIntent().getBundleExtra("Bundle").getSerializable("State");
         stickerList = new StickerList();
         tagList = new TagList();
+//        sticker = stickerList.getStickerListByCategoryId(category.getCategoryID()).get(stickerIndex);
         table = getApplicationContext().getResources().getStringArray(R.array.sticker_state);
         title = (TextView)findViewById(R.id.stickerTitle_input);
         description = (TextView)findViewById(R.id.stickerDescription_input);
@@ -280,7 +283,6 @@ public class sticker_page extends ActionBarActivity {
         int index = Integer.parseInt(text.getTag().toString());
         stickerTagList.remove(index);
         handleTags();
-        if()
         dialog.dismiss();
     }
 
@@ -358,7 +360,7 @@ public class sticker_page extends ActionBarActivity {
                 remind.getText().toString(), isFinished.isChecked());
         stickerList.setSticker(temp);
 
-        if(PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("@string/remind", true)){
+/*        if(PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("@string/remind", true)){
             Intent intent = new Intent(MainApplication.getContext(), Reminder.class);
             Bundle bundle = new Bundle();
             bundle.putLong("stickerRemindTime", temp.calculateDate(temp.getRemindTime()));
@@ -367,7 +369,7 @@ public class sticker_page extends ActionBarActivity {
             bundle.putBoolean("operationCode", true);
             intent.putExtra("Bundle", bundle);
             startService(intent);
-        }
+        }*/
 
         this.finish();
     }

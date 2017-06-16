@@ -99,9 +99,19 @@ public class TagAdapter extends BaseAdapter {
         chosen.setVisibility(UI_vis[isVisible[i]]);
         title.setVisibility(UI_vis[isVisible[i]]);
         edit.setVisibility(UI_vis[isVisible[i]]);
+        remove.setOnClickListener(cancelTagButtonListener());
         chosen.setChecked(isChosen[i]);
         chosen.setEnabled(false);
         return view;
+    }
+
+    private View.OnClickListener cancelTagButtonListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((sticker_page)context).cancelSelectedTag();
+            }
+        };
     }
 
     private View.OnClickListener editButtonListener(final int index){
