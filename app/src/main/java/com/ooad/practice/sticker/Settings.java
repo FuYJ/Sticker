@@ -46,7 +46,7 @@ public class Settings extends PreferenceActivity {
         }
 
         private void switchNotification(boolean notificationValue){
-            Intent intent = new Intent(MainApplication.getContext(), Reminder.class);
+            /*Intent intent = new Intent(MainApplication.getContext(), Reminder.class);
             List<Sticker> stickerList = new StickerList().getRemindList();
 
             for(Sticker sticker: stickerList){
@@ -57,7 +57,7 @@ public class Settings extends PreferenceActivity {
                 bundle.putBoolean("operationCode", notificationValue);
                 intent.putExtra("Bundle", bundle);
                 getActivity().startService(intent);
-            }
+            }*/
         }
     }
 

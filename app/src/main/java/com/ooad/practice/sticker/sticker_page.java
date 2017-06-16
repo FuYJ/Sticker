@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -359,18 +360,6 @@ public class sticker_page extends ActionBarActivity {
                 description.getText().toString(), deadline.getText().toString(),
                 remind.getText().toString(), isFinished.isChecked());
         stickerList.setSticker(temp);
-
-/*        if(PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext()).getBoolean("@string/remind", true)){
-            Intent intent = new Intent(MainApplication.getContext(), Reminder.class);
-            Bundle bundle = new Bundle();
-            bundle.putLong("stickerRemindTime", temp.calculateDate(temp.getRemindTime()));
-            bundle.putString("stickerTitle", temp.getTitle());
-            bundle.putInt("stickerID", temp.getStickerID());
-            bundle.putBoolean("operationCode", true);
-            intent.putExtra("Bundle", bundle);
-            startService(intent);
-        }*/
-
         this.finish();
     }
 

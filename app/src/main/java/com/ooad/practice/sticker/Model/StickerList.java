@@ -32,24 +32,29 @@ import java.util.List;
 public class StickerList {
     private IDataAccessObject stickerDAO;
     private IDataAccessObject stickerTagsDAO;
-    private SharedPreferences sharedPreferences;
 
     public StickerList(){
         Context context = MainApplication.getContext();
-        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         stickerDAO = new StickerAccessObject(context);
         stickerTagsDAO = new StickerTagsAccessObject(context);
     }
 
-    public StickerList(IDataAccessObject stickerDAO, IDataAccessObject stickerTagsDAO, SharedPreferences sharedPreferences){
-        this.sharedPreferences = sharedPreferences;
+    public StickerList(IDataAccessObject stickerDAO, IDataAccessObject stickerTagsDAO){
         this.stickerDAO = stickerDAO;
         this.stickerTagsDAO = stickerTagsDAO;
     }
 
-    public List<Sticker> getStickerListByCategoryId(Integer categoryId){
+    public Sticker getStickerByStickerId(Integer stickerID){
+        JSONObject jObj = stickerDAO.retrieveOne(stickerID);
+        Sticker result = new Sticker(jObj);
+        List<Tag> tagList = new TagList().getTagListByStickerId(stickerID);
+        result.setTagList(tagList);
+        return result;
+    }
+
+    public List<Sticker> getStickerListByCategoryId(Integer categoryID){
         List<Sticker> result = new ArrayList<>();
-        String where = IDataAccessObject.STICKER_CATEGORY_ID + " = " + categoryId.toString();
+        String where = IDataAccessObject.STICKER_CATEGORY_ID + " = " + categoryID.toString();
         JSONArray jArr = stickerDAO.retrieveWhere(where);
         for(int i = 0; i < jArr.length(); i++){
             try {
