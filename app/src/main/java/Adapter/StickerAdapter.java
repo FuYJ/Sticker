@@ -42,7 +42,7 @@ public class StickerAdapter extends BaseAdapter {
     private StickerList sticker;
     private TagList tag;
     private Category category;
-    private int UI_vis[] = {View.GONE,View.VISIBLE};
+    private int UI_vis[] = {View.GONE, View.VISIBLE, View.INVISIBLE};
 
     public StickerAdapter(Context c, List<Sticker> stickerList, int[] isCreateButtonVisible, int[] isEditButtonVisible, Category category){
         inflater = LayoutInflater.from(c);
@@ -52,6 +52,7 @@ public class StickerAdapter extends BaseAdapter {
         this.context = c;
         this.sticker = new StickerList();
         this.category = category;
+        tag = new TagList();
     }
 
     @Override
@@ -74,11 +75,13 @@ public class StickerAdapter extends BaseAdapter {
         view = inflater.inflate(R.layout.sticker_item,viewGroup,false);
         TextView title, description;
         Button createButton, deleteButton, editButton;
+        TableRow tagRow;
         title = (TextView)view.findViewById(R.id.sticker_title);
         description = (TextView)view.findViewById(R.id.sticker_deadline);
         createButton = (Button)view.findViewById(R.id.create_sticker);
         deleteButton = (Button)view.findViewById(R.id.delete_sticker);
         editButton = (Button)view.findViewById(R.id.edit_sticker);
+        tagRow = (TableRow)view.findViewById(R.id.stickerTagRow);
         if(i > 0){
             title.setText(stickerList.get(i - 1).getTitle());
             description.setText(stickerList.get(i - 1).getDeadline());
@@ -87,44 +90,32 @@ public class StickerAdapter extends BaseAdapter {
         createButton.setOnClickListener(createListener());
         title.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         description.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
-//        tags.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
+        tagRow.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         deleteButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
         deleteButton.setOnClickListener(deleteListener(i));
         editButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
         editButton.setOnClickListener(editListener(i));
-        handleTags(view);
+//        handleTags(view, i);
         return view;
     }
 
-    private void handleTags(View view){
-        int index;
+    private void handleTags(View view, int position){
         tags = new TextView[8];
+        tagList = tag.getTagListByStickerId(stickerList.get(position - 1).getStickerID());
         String headString = "stickerTags";
         String temp;
         for (int i = 0; i < 8; i++) {
             temp = headString + i;
             tags[i] = (TextView) view.findViewById(context.getResources().getIdentifier(temp, "id", context.getPackageName()));
             tags[i].setText("");
-        }
-/*        Toast.makeText(this, stickerTagList.size() + "", Toast.LENGTH_LONG).show();
-        for(index = 0; index < stickerTagList.size(); index++){
-            tags[index].setEnabled(true);
-            tags[index].setVisibility(UI_vis[1]);
-            List<Integer> color = stickerTagList.get(index).getColor();
-            tags[index].setBackgroundColor(android.graphics.Color.argb(255, color.get(0), color.get(1), color.get(2)));
-        }
-        if(index < 8){
-            tags[index].setEnabled(true);
-            tags[index].setVisibility(UI_vis[1]);
-            tags[index].setBackgroundColor(0xFFFFFFFF);
-            tags[index].setText("+");
-            index++;
+            tags[i].setVisibility(UI_vis[2]);
         }
 
-        for(index = index; index < 8; index++){
-            tags[index].setEnabled(false);
-            tags[index].setVisibility(UI_vis[0]);
-        }*/
+        for(int i = 0; i < tagList.size(); i++){
+            List<Integer> color = tagList.get(i).getColor();
+            tags[i].setBackgroundColor(android.graphics.Color.argb(255, color.get(0), color.get(1), color.get(2)));
+            tags[i].setVisibility(UI_vis[1]);
+        }
     }
 
     private View.OnClickListener createListener(){
