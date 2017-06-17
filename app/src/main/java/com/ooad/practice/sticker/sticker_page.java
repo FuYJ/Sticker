@@ -100,7 +100,6 @@ public class sticker_page extends ActionBarActivity {
             stickerTagList = tagList.getTagListByStickerId(sticker.getStickerID());
         else
             stickerTagList = new ArrayList<Tag>();
-        handleTags();
         updateView();
     }
 
@@ -110,18 +109,21 @@ public class sticker_page extends ActionBarActivity {
             setUIEnable(true);
             left.setText(CREATE);
             right.setText(CANCEL);
+            handleTags(true);
         }
         else if(table[1].equals(state)){
             setUIEnable(true);
             setUIText();
             left.setText(MODIFY);
             right.setText(CANCEL);
+            handleTags(true);
         }
         else if(table[2].equals(state)){
             setUIEnable(false);
             setUIText();
             left.setText(MODIFY);
             right.setText(DELETE);
+            handleTags(false);
         }
     }
 
@@ -140,7 +142,7 @@ public class sticker_page extends ActionBarActivity {
         categories.setSelection(selectedIndex);
     }
 
-    private void handleTags(){
+    private void handleTags(boolean isEnable){
         int index;
         tags = new TextView[8];
         String headString = "stickerTags";
@@ -151,15 +153,15 @@ public class sticker_page extends ActionBarActivity {
             tags[i].setOnClickListener(tagListener(this.getResources().getIdentifier(temp, "id", getPackageName())));
             tags[i].setText("");
         }
-        Toast.makeText(this, stickerTagList.size() + "", Toast.LENGTH_LONG).show();
+
         for(index = 0; index < stickerTagList.size(); index++){
-            tags[index].setEnabled(true);
+            tags[index].setEnabled(isEnable);
             tags[index].setVisibility(UI_vis[1]);
             List<Integer> color = stickerTagList.get(index).getColor();
             tags[index].setBackgroundColor(android.graphics.Color.argb(255, color.get(0), color.get(1), color.get(2)));
         }
-        if(index < 8){
-            tags[index].setEnabled(true);
+        if(index < 8 && isEnable){
+            tags[index].setEnabled(isEnable);
             tags[index].setVisibility(UI_vis[1]);
             tags[index].setBackgroundColor(0xFFFFFFFF);
             tags[index].setText("+");
@@ -254,7 +256,7 @@ public class sticker_page extends ActionBarActivity {
                     else{
                         stickerTagList.set(Integer.parseInt(text.getTag().toString()), temp);
                     }
-                    handleTags();
+                    handleTags(true);
                     dialog.dismiss();
                 }
                 else{
@@ -288,7 +290,7 @@ public class sticker_page extends ActionBarActivity {
         TextView text = (TextView)findViewById(selectedTagID);
         int index = Integer.parseInt(text.getTag().toString());
         stickerTagList.remove(index);
-        handleTags();
+        handleTags(true);
         dialog.dismiss();
     }
 
@@ -371,12 +373,38 @@ public class sticker_page extends ActionBarActivity {
     }
 
     private void modifySticker(){
+        boolean temp;
+        List<Tag> oldStickerTagList = tagList.getTagListByStickerId(sticker.getStickerID());
         sticker = new Sticker(sticker.getStickerID(), category.getCategoryID(), title.getText().toString(),
                 description.getText().toString(), deadline.getText().toString(),
                 remind.getText().toString(), isFinished.isChecked());
         stickerList.setSticker(sticker);
-        for(int i = 0; i < stickerTagList.size(); i++)
-            stickerList.setTagToSticker(sticker, stickerTagList.get(i));
+/*        for(int i = 0; i < oldStickerTagList.size(); i++){
+            temp = true;
+            int tagID = oldStickerTagList.get(i).getTagID();
+            for(int j = 0; j < stickerTagList.size(); j++){
+                if(tagID == stickerTagList.get(j).getTagID()){
+                    temp = false;
+                    break;
+                }
+            }
+            if(temp){
+                stickerList.deleteTagFromSticker(sticker, oldStickerTagList.get(i));
+            }
+        }*/
+        for(int i = 0; i < stickerTagList.size(); i++){
+            temp = true;
+            int tagID = stickerTagList.get(i).getTagID();
+            for(int j = 0; j < oldStickerTagList.size(); j++){
+                if(tagID == oldStickerTagList.get(j).getTagID()){
+                    temp = false;
+                    break;
+                }
+            }
+            if(temp){
+                stickerList.setTagToSticker(sticker, stickerTagList.get(i));
+            }
+        }
     }
 
     private void deleteSticker(){
