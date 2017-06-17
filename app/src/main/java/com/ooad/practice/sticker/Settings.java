@@ -39,6 +39,7 @@ public class Settings extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference);
             getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
         }
 
         @Override

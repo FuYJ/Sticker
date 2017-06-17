@@ -14,6 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:tag="0"
             android:text="Category" />
 
         <CheckBox
@@ -21,6 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:tag="1"
             android:text="Sticker" />
 
         <CheckBox
@@ -28,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:tag="2"
             android:text="Tag" />
     </LinearLayout>
 
@@ -38,7 +41,7 @@
         android:weightSum="1">
 
         <Switch
-            android:id="@+id/switch2"
+            android:id="@+id/isFinished"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="是否完成:"

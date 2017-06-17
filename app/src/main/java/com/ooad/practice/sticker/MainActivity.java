@@ -21,18 +21,24 @@ import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity{
-
+    Button nextPageBtn;
+    Button settingButton;
+    Button searchButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Main");
         setContentView(R.layout.activity_main);
 
-        Button nextPageBtn = (Button)findViewById(R.id.Category);
+        nextPageBtn = (Button)findViewById(R.id.Category);
         nextPageBtn.setOnClickListener(changeToCategory());
 
-        Button settingButton = (Button)findViewById(R.id.Setting);
+        settingButton = (Button)findViewById(R.id.Setting);
         settingButton.setOnClickListener(changeToSettings());
+
+        searchButton = (Button)findViewById(R.id.Search);
+        searchButton.setOnClickListener(changeToSearch());
+
     }
 
     @Override
@@ -74,6 +80,17 @@ public class MainActivity extends ActionBarActivity{
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this  , Settings.class);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener changeToSearch(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this  , search_sticker.class);
                 startActivity(intent);
             }
         };

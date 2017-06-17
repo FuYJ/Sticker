@@ -96,10 +96,13 @@ public class sticker_page extends ActionBarActivity {
         left.setOnClickListener(leftButtonListener());
         right = (Button)findViewById(R.id.rightButton);
         right.setOnClickListener(rightButtonListener());
-        if(sticker != null)
+        if(sticker != null){
             stickerTagList = tagList.getTagListByStickerId(sticker.getStickerID());
-        else
+            isFinished.setChecked(true);
+        }
+        else{
             stickerTagList = new ArrayList<Tag>();
+        }
         updateView();
     }
 

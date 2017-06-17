@@ -24,6 +24,7 @@
             android:name=".sticker_list"
             android:label="@string/title_activity_sticker_list"></activity>
         <activity android:name=".sticker_page" />
+        <activity android:name=".search_sticker" />
 
         <service android:name=".Model.Reminder">
             <intent-filter>
