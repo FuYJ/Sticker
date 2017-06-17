@@ -28,7 +28,7 @@ import java.util.TimerTask;
  * Created by fuyiru on 2017/6/15.
  */
 
-public class Reminder extends Service{
+public class Reminder{
     private Handler mHandler;
     private NotificationManager manager;
     private NotificationCompat.Builder builder;
@@ -39,8 +39,20 @@ public class Reminder extends Service{
     private Long stickerRemindTime;
     private Timer timer;
 
+    public Reminder(Intent intent){
+        timer = new Timer();
+        manager = (NotificationManager) MainApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        builder = new NotificationCompat.Builder(MainApplication.getContext());
+        Intent notifyIntent = new Intent(MainApplication.getContext(), MainActivity.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        appIntent = PendingIntent.getActivity(MainApplication.getContext(), 0, notifyIntent, 0);
+        this.operationCode = intent.getBundleExtra("Bundle").getBoolean("operationCode");
+        this.stickerID = intent.getBundleExtra("Bundle").getInt("stickerID");
+        this.stickerTitle = intent.getBundleExtra("Bundle").getString("stickerTitle");
+        this.stickerRemindTime = intent.getBundleExtra("Bundle").getLong("stickerRemindTime");
+    }
 
-    @Override
+/*    @Override
     public void onCreate() {
         super.onCreate();
         timer = new Timer();
@@ -79,9 +91,9 @@ public class Reminder extends Service{
         }, delayTime);
 
         return START_NOT_STICKY;
-    }
+    }*/
 
-    private void createNotification(){
+    public void createNotification(){
         builder.setSmallIcon(R.drawable.abc_ab_share_pack_mtrl_alpha)
                 .setContentTitle("有即將到期的便利貼")
                 .setContentText(stickerTitle + " 的Deadline快到囉")
