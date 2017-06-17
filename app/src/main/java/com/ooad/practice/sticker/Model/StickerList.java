@@ -157,8 +157,8 @@ public class StickerList {
     }
 
     public void deleteTagFromSticker(Sticker sticker, Tag tag){
-        String where = IDataAccessObject.STICKER_TAGS_STICKER_ID + " = \"" + sticker.getStickerID().toString() + "\" AND"
-                + IDataAccessObject.STICKER_TAGS_TAG_ID + " = \"" + tag.getTagID().toString() + "\"";
+        String where = IDataAccessObject.STICKER_TAGS_STICKER_ID + " = " + sticker.getStickerID().toString() + " AND "
+                + IDataAccessObject.STICKER_TAGS_TAG_ID + " = " + tag.getTagID().toString();
         JSONArray jArr = stickerTagsDAO.retrieveWhere(where);
         int count = jArr.length();
         if(count > 0){

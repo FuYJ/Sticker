@@ -1,14 +1,10 @@
 package com.ooad.practice.sticker.Model;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.util.Log;
 
 import com.ooad.practice.sticker.Bean.Tag;
-import com.ooad.practice.sticker.Database.Database;
 import com.ooad.practice.sticker.Database.IDataAccessObject;
-import com.ooad.practice.sticker.Database.IDatabase;
 import com.ooad.practice.sticker.Database.StickerTagsAccessObject;
 import com.ooad.practice.sticker.Database.TagAccessObject;
 import com.ooad.practice.sticker.MainApplication;

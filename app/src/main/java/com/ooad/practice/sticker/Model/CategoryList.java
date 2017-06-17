@@ -1,15 +1,11 @@
 package com.ooad.practice.sticker.Model;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.util.Log;
 
 import com.ooad.practice.sticker.Bean.Category;
 import com.ooad.practice.sticker.Database.CategoryAccessObject;
-import com.ooad.practice.sticker.Database.Database;
 import com.ooad.practice.sticker.Database.IDataAccessObject;
-import com.ooad.practice.sticker.Database.IDatabase;
 import com.ooad.practice.sticker.Database.StickerAccessObject;
 import com.ooad.practice.sticker.MainApplication;
 
@@ -53,7 +49,7 @@ public class CategoryList {
             jArr = categoryDAO.retrieveAll();
         }
         else{
-            String where = Database.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
+            String where = IDataAccessObject.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
             jArr = categoryDAO.retrieveWhere(where);
         }
 
@@ -73,7 +69,7 @@ public class CategoryList {
 
     public int setCategory(Category category){
         JSONObject jObj = category.toJSONObject();
-        String where = Database.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"";
+        String where = IDataAccessObject.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"";
         try{
             JSONArray categoriesWithSameTitle = categoryDAO.retrieveWhere(where);
             int categoryIDWithSameTitle = categoriesWithSameTitle.getJSONObject(0).getInt(IDataAccessObject.CATEGORY_ID);
