@@ -105,7 +105,7 @@ public class sticker_page extends ActionBarActivity {
         right.setOnClickListener(rightButtonListener());
         if(sticker != null){
             stickerTagList = tagList.getTagListByStickerId(sticker.getStickerID());
-            isFinished.setChecked(true);
+            isFinished.setChecked(sticker.getFinished());
         }
         else{
             stickerTagList = new ArrayList<Tag>();
