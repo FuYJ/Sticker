@@ -7,6 +7,8 @@ import android.util.Log;
 import com.ooad.practice.sticker.Database.IDataAccessObject;
 import com.ooad.practice.sticker.MainActivity;
 import com.ooad.practice.sticker.MainApplication;
+import com.ooad.practice.sticker.R;
+import com.ooad.practice.sticker.Settings;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by fuyiru on 2017/5/4.
@@ -147,7 +151,8 @@ public class Sticker implements Serializable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         formattedDate = "";
         Calendar calendar = Calendar.getInstance();
-        if(sharedPreferences.getString("@string/calendars", "西元曆").equals("國曆")){
+        String selectedCalendar = MainApplication.getContext().getResources().getString(R.string.calendars);
+        if(sharedPreferences.getString(selectedCalendar, "西元曆").equals("國曆")){
             calendar.setTimeInMillis(date);
             calendar.add(Calendar.YEAR, -1911);
             date = calendar.getTime().getTime();
@@ -165,7 +170,8 @@ public class Sticker implements Serializable {
         try {
             Calendar calendar = Calendar.getInstance();
             dateTime = sdf.parse(date).getTime();
-            if(sharedPreferences.getString("@string/calendars", "西元曆").equals("國曆")){
+            String selectedCalendar = MainApplication.getContext().getResources().getString(R.string.calendars);
+            if(sharedPreferences.getString(selectedCalendar, "西元曆").equals("國曆")){
                 calendar.setTimeInMillis(dateTime);
                 calendar.add(Calendar.YEAR, 1911);
                 dateTime = calendar.getTime().getTime();

@@ -17,7 +17,6 @@
     <string-array name="calendar_options">
         <item>西元曆</item>
         <item>國曆</item>
-        <item>農曆</item>
     </string-array>
     <string name="title_activity_sticker_list">sticker_list</string>
 
