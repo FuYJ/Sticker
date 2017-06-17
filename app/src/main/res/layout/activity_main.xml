@@ -19,45 +19,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/emergentNumber"
-                    android:layout_width="40dp"
-                    android:layout_height="35dp"
-                    android:layout_marginEnd="76dp"
-                    android:layout_marginRight="76dp"
-                    android:layout_marginTop="161dp"
-                    android:text="0"
-                    android:textAlignment="center"
-                    android:textSize="30sp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <Button
-                    android:id="@+id/recentStickers"
+                    android:id="@+id/emergentStickers"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="21dp"
-                    android:text="@string/recent_stickers"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/emergentStickers" />
-
-                <Button
-                    android:id="@+id/emergentStickers"
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="76dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="84dp"
                     android:layout_marginStart="76dp"
-                    android:layout_marginTop="161dp"
-                    android:text="@string/emergent_stickers"
+                    android:layout_marginTop="178dp"
+                    android:text="緊急的Stickers   |   5"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@+id/emergentNumber"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>

@@ -27,6 +27,10 @@ public class category_list extends ActionBarActivity {
     private int length;
     private String searchKey;
     private EditText searchInput;
+    private Button mainButton;
+    private Button categoryPageBtn;
+    private Button settingAppButton;
+    private Button searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,15 @@ public class category_list extends ActionBarActivity {
         settingButton.setOnClickListener(settingsListener());
         searchInput = (EditText)findViewById(R.id.searchInput);
         searchInput.setOnKeyListener(searchInputLinstener());
+
+        mainButton = (Button)findViewById(R.id.MainPage);
+        mainButton.setOnClickListener(mainButtonListener());
+        categoryPageBtn = (Button)findViewById(R.id.Category);
+        categoryPageBtn.setEnabled(false);
+        settingAppButton = (Button)findViewById(R.id.Setting);
+        settingAppButton.setOnClickListener(changeToSettings());
+        searchButton = (Button)findViewById(R.id.Search);
+        searchButton.setOnClickListener(changeToSearch());
         category = new CategoryList();
 
         updateView();
@@ -110,6 +123,42 @@ public class category_list extends ActionBarActivity {
                     intent.putExtra("Bundle", bundle);
                     startActivity(intent);
                 }
+            }
+        };
+    }
+
+    private View.OnClickListener mainButtonListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(category_list.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("Bundle", bundle);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener changeToSettings(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(category_list.this, Settings.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("Bundle", bundle);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener changeToSearch(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(category_list.this, search_sticker.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("Bundle", bundle);
+                startActivity(intent);
             }
         };
     }
