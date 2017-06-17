@@ -35,6 +35,8 @@ import com.ooad.practice.sticker.Model.ReminderAlarmReceiver;
 import com.ooad.practice.sticker.Model.StickerList;
 import com.ooad.practice.sticker.Model.TagList;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -60,6 +62,7 @@ public class sticker_page extends ActionBarActivity {
     private Spinner categories;
     private TextView title;
     private TextView description;
+    private TextView calendar;
     private TextView deadline;
     private TextView remind;
     private CheckBox isFinished;
@@ -96,6 +99,8 @@ public class sticker_page extends ActionBarActivity {
         table = getApplicationContext().getResources().getStringArray(R.array.sticker_state);
         title = (TextView)findViewById(R.id.stickerTitle_input);
         description = (TextView)findViewById(R.id.stickerDescription_input);
+        calendar = (TextView)findViewById(R.id.calendar);
+        calendar.setText(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("曆法", ""));
         deadline = (TextView)findViewById(R.id.stickerDeadline_input);
         remind = (TextView)findViewById(R.id.stickerRemind_input);
         isFinished = (CheckBox)findViewById(R.id.finished_check);

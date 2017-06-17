@@ -3,9 +3,6 @@
 
     <string name="action_settings">Settings</string>
 
-    <string name="emergent_stickers">緊急的Stickers</string>
-    <string name="recent_stickers">最近的Stickers</string>
-
     <string name="navigation_mainpage">主頁</string>
     <string name="navigation_category">分類</string>
     <string name="navigation_search">搜尋</string>
