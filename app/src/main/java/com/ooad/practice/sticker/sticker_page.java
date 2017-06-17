@@ -379,7 +379,7 @@ public class sticker_page extends ActionBarActivity {
                 description.getText().toString(), deadline.getText().toString(),
                 remind.getText().toString(), isFinished.isChecked());
         stickerList.setSticker(sticker);
-/*        for(int i = 0; i < oldStickerTagList.size(); i++){
+        for(int i = 0; i < oldStickerTagList.size(); i++){
             temp = true;
             int tagID = oldStickerTagList.get(i).getTagID();
             for(int j = 0; j < stickerTagList.size(); j++){
@@ -391,7 +391,7 @@ public class sticker_page extends ActionBarActivity {
             if(temp){
                 stickerList.deleteTagFromSticker(sticker, oldStickerTagList.get(i));
             }
-        }*/
+        }
         for(int i = 0; i < stickerTagList.size(); i++){
             temp = true;
             int tagID = stickerTagList.get(i).getTagID();
