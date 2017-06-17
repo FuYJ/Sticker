@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -32,7 +33,7 @@ import Adapter.StickerAdapter;
  */
 
 public class search_sticker extends ActionBarActivity {
-    private Button searchSettings;
+    private ImageButton searchSettings;
     private TextView inputKey;
     private ListView listView;
     private Dialog dialog;
@@ -51,7 +52,7 @@ public class search_sticker extends ActionBarActivity {
         setTitle("Search Sticker");
         setContentView(R.layout.activity_search_sticker);
 
-        searchSettings = (Button)findViewById(R.id.setting);
+        searchSettings = (ImageButton)findViewById(R.id.setting);
         inputKey = (TextView)findViewById(R.id.searchInput);
         listView = (ListView)findViewById(R.id.sticker_list);
         initializeSearchSettings();
