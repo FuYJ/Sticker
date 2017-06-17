@@ -40,6 +40,10 @@ public class search_sticker extends ActionBarActivity {
     private List<Sticker> sticker;
     private List<Boolean> searchCategory;
     private Boolean isFinished;
+    private Button mainButton;
+    private Button categoryPageBtn;
+    private Button settingAppButton;
+    private Button searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,16 @@ public class search_sticker extends ActionBarActivity {
         initializeSearchSettings();
         searchSettings.setOnClickListener(searchSettings());
         inputKey.setOnKeyListener(searchInputLinstener());
+
+        mainButton = (Button)findViewById(R.id.MainPage);
+        mainButton.setOnClickListener(mainButtonListener());
+        categoryPageBtn = (Button)findViewById(R.id.Category);
+        categoryPageBtn.setOnClickListener(changeToCategory());
+        settingAppButton = (Button)findViewById(R.id.Setting);
+        settingAppButton.setOnClickListener(changeToSettings());
+        searchButton = (Button)findViewById(R.id.Search);
+        searchButton.setEnabled(false);
+
         stickerList = new StickerList();
     }
 
@@ -160,6 +174,42 @@ public class search_sticker extends ActionBarActivity {
                     return true;
                 }
                 return false;
+            }
+        };
+    }
+
+    private View.OnClickListener mainButtonListener(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(search_sticker.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("Bundle", bundle);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener changeToSettings(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(search_sticker.this, Settings.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("Bundle", bundle);
+                startActivity(intent);
+            }
+        };
+    }
+
+    private View.OnClickListener changeToCategory(){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(search_sticker.this, category_list.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra("Bundle", bundle);
+                startActivity(intent);
             }
         };
     }
