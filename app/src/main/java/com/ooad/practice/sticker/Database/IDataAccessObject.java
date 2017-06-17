@@ -69,11 +69,6 @@ public interface IDataAccessObject {
     String ORDER_ASC = " ASC";
     String ORDER_DESC = " DESC";
 
-    enum OrderBy{
-        ORDER_ASC,
-        ORDER_DESC
-    }
-
     enum SearchTarget{
         STICKER,
         CATEGORY,

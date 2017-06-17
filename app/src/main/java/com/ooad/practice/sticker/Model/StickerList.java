@@ -99,19 +99,19 @@ public class StickerList {
                     if(where == "")
                         where += IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
                     else
-                        where += "AND" + IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += " AND " + IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
                     break;
                 case CATEGORY:
                     if(where == "")
                         where += IDataAccessObject.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
                     else
-                        where += "AND" + IDataAccessObject.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += " AND " + IDataAccessObject.CATEGORY_TITLE + " LIKE \"%" + keyword + "%\"";
                     break;
                 case TAG:
                     if(where == "")
                         where += IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
                     else
-                        where += "AND" + IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += " AND " + IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
                     break;
             }
         }
@@ -123,13 +123,13 @@ public class StickerList {
             if(where == "")
                 where += IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
             else
-                where += "AND" + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
+                where += " AND " + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
         }
         else{
             if(where == "")
                 where += IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
             else
-                where += "AND" + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
+                where += " AND " + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
         }
         return where;
     }
