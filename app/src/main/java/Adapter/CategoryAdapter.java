@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,17 +26,15 @@ public class CategoryAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Category> categoryList;
     private int[] isCreateButtonVisible;
-    private int[] isEditButtonVisible;
     private int UI_vis[] = {View.GONE,View.VISIBLE};
     private CategoryList category;
     private Context context;
     private Dialog dialog;
 
-    public CategoryAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible, int[] isEditButtonVisible){
+    public CategoryAdapter(Context c, List<Category> categoryList, int[] isCreateButtonVisible){
         inflater = LayoutInflater.from(c);
         this.categoryList = categoryList;
         this.isCreateButtonVisible = isCreateButtonVisible;
-        this.isEditButtonVisible = isEditButtonVisible;
         this.context = c;
         this.category = new CategoryList();
     }
@@ -57,13 +56,13 @@ public class CategoryAdapter extends BaseAdapter {
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
         TextView name, description;
-        Button createButton, deleteButton, editButton;
+        Button createButton;
+        ImageButton editButton;
         view = inflater.inflate(R.layout.category_item,viewGroup,false);
         name = (TextView) view.findViewById(R.id.category_name);
         description = (TextView) view.findViewById(R.id.category_description);
         createButton = (Button) view.findViewById(R.id.create_category);
-        deleteButton = (Button) view.findViewById(R.id.delete_category);
-        editButton = (Button) view.findViewById(R.id.edit_category);
+        editButton = (ImageButton) view.findViewById(R.id.edit_category);
         if(i > 0){
             name.setText(categoryList.get(i - 1).getTitle());
             description.setText(categoryList.get(i - 1).getDescription());
@@ -71,10 +70,8 @@ public class CategoryAdapter extends BaseAdapter {
         createButton.setVisibility(UI_vis[isCreateButtonVisible[i]]);
         name.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         description.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
-        deleteButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
-        editButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
+        editButton.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         createButton.setOnClickListener(createListener());
-        deleteButton.setOnClickListener(reconfirmListener(i));
         editButton.setOnClickListener(editListener(i));
         return view;
     }
@@ -129,12 +126,13 @@ public class CategoryAdapter extends BaseAdapter {
                 dialog.setContentView(R.layout.popup_category);
                 dialog.setTitle("編輯分類");
                 Button categoryEdit = (Button)dialog.findViewById(R.id.category_create);
-                Button categoryCancel = (Button)dialog.findViewById(R.id.category_cancel);
+                Button categoryDelete = (Button)dialog.findViewById(R.id.category_cancel);
                 final TextView title = (TextView)dialog.findViewById(R.id.category_title_input);
                 final TextView description = (TextView)dialog.findViewById(R.id.category_description_input);
                 title.setText(categoryList.get(index - 1).getTitle());
                 description.setText(categoryList.get(index - 1).getDescription());
                 categoryEdit.setText("編輯");
+                categoryDelete.setText("刪除");
                 dialog.show();
                 categoryEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -155,12 +153,7 @@ public class CategoryAdapter extends BaseAdapter {
                             Toast.makeText(v.getContext(), "Title沒有輸入", Toast.LENGTH_SHORT).show();
                     }
                 });
-                categoryCancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
+                categoryDelete.setOnClickListener(reconfirmListener(index));
             }
         };
     }
@@ -169,14 +162,15 @@ public class CategoryAdapter extends BaseAdapter {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(v.getContext());
-                dialog.setContentView(R.layout.popup_reconfirmation);
-                dialog.setTitle("確認");
-                TextView text = (TextView)dialog.findViewById(R.id.reconfirm_text);
-                Button confirm = (Button)dialog.findViewById(R.id.confirm);
-                Button concel = (Button)dialog.findViewById(R.id.concel);
-                text.setText("確定要刪除嗎?");
-                dialog.show();
+                final Dialog d;
+                d = new Dialog(v.getContext());
+                d.setContentView(R.layout.popup_reconfirmation);
+                d.setTitle("確認");
+                TextView text = (TextView)d.findViewById(R.id.reconfirm_text);
+                Button confirm = (Button)d.findViewById(R.id.confirm);
+                Button concel = (Button)d.findViewById(R.id.concel);
+                text.setText("確定要刪除嗎?裡面的Stickers也會刪掉");
+                d.show();
                 confirm.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -185,15 +179,16 @@ public class CategoryAdapter extends BaseAdapter {
                         if(context instanceof category_list){
                             ((category_list)context).updateView();
                         }
-                        dialog.dismiss();
+                        d.dismiss();
                     }
                 });
                 concel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
+                        d.dismiss();
                     }
                 });
+                dialog.dismiss();
             }
         };
     }

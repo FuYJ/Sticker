@@ -20,10 +20,7 @@ public class category_list extends ActionBarActivity {
     private List<Category> categoryList;
     private CategoryList category;
     private ListView listView;
-    private Button settingButton;
-    private int isVisible = 0;
     private int[] isCreateButtonVisible;
-    private int[] isEditButtonVisible;
     private int length;
     private String searchKey;
     private EditText searchInput;
@@ -38,8 +35,6 @@ public class category_list extends ActionBarActivity {
         setTitle("Category List");
         setContentView(R.layout.activity_category_list);
 
-        settingButton = (Button)findViewById(R.id.setting);
-        settingButton.setOnClickListener(settingsListener());
         searchInput = (EditText)findViewById(R.id.searchInput);
         searchInput.setOnKeyListener(searchInputLinstener());
 
@@ -66,32 +61,19 @@ public class category_list extends ActionBarActivity {
         categoryList = category.getCategoryList(searchKey);
         length = categoryList.size();
         isCreateButtonVisible = new int[length + 1];
-        isEditButtonVisible = new int[length + 1];
 
         for(int i = 0; i < length + 1; i++){
             if(i == 0){
                 isCreateButtonVisible[i] = 1;
-                isEditButtonVisible[i] = 0;
             }
             else{
                 isCreateButtonVisible[i] = 0;
-                isEditButtonVisible[i] = isVisible;
             }
         }
 
         listView = (ListView)findViewById(R.id.category_list);
-        listView.setAdapter(new CategoryAdapter(category_list.this, categoryList, isCreateButtonVisible, isEditButtonVisible));
+        listView.setAdapter(new CategoryAdapter(category_list.this, categoryList, isCreateButtonVisible));
         listView.setOnItemClickListener(listItemListener());
-    }
-
-    private View.OnClickListener settingsListener(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isVisible = (isVisible + 1) % 2;
-                updateView();
-            }
-        };
     }
 
     private View.OnKeyListener searchInputLinstener(){

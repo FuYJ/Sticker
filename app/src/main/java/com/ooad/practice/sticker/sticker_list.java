@@ -24,15 +24,11 @@ public class sticker_list extends ActionBarActivity {
     private List<Sticker> stickerList;
     private Category category;
     private ListView listView;
-    private Button settingButton;
-    private EditText searchInput;
     private StickerList sticker;
     private CategoryList categoryList;
-    private int isVisible = 0;
     private String keyword;
     private int length;
     private int[] isCreateButtonVisible;
-    private int[] isEditButtonVisible;
     private Button mainButton;
     private Button categoryPageBtn;
     private Button settingAppButton;
@@ -45,10 +41,6 @@ public class sticker_list extends ActionBarActivity {
         categoryList = new CategoryList();
         category = categoryList.getCategoryByCategoryId((int)getIntent().getBundleExtra("Bundle").getSerializable("CategoryID"));
         setTitle(category.getTitle());
-
-        settingButton = (Button)findViewById(R.id.setting);
-        settingButton.setOnClickListener(settingsListener());
-        searchInput = (EditText)findViewById(R.id.searchInput);
 
         mainButton = (Button)findViewById(R.id.MainPage);
         mainButton.setOnClickListener(mainButtonListener());
@@ -73,32 +65,19 @@ public class sticker_list extends ActionBarActivity {
         stickerList = sticker.getStickerListByCategoryId(category.getCategoryID());
         length = stickerList.size();
         isCreateButtonVisible = new int[length + 1];
-        isEditButtonVisible = new int[length + 1];
 
         for(int i = 0; i < length + 1; i++){
             if(i == 0){
                 isCreateButtonVisible[i] = 1;
-                isEditButtonVisible[i] = 0;
             }
             else{
                 isCreateButtonVisible[i] = 0;
-                isEditButtonVisible[i] = isVisible;
             }
         }
 
         listView = (ListView)findViewById(R.id.sticker_list);
-        listView.setAdapter(new StickerAdapter(sticker_list.this, stickerList, isCreateButtonVisible, isEditButtonVisible, category));
+        listView.setAdapter(new StickerAdapter(sticker_list.this, stickerList, isCreateButtonVisible, category));
         listView.setOnItemClickListener(listItemListener());
-    }
-
-    private View.OnClickListener settingsListener(){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isVisible = (isVisible + 1) % 2;
-                update();
-            }
-        };
     }
 
     private AdapterView.OnItemClickListener listItemListener(){

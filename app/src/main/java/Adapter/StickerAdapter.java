@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,18 +38,16 @@ public class StickerAdapter extends BaseAdapter {
     private List<Sticker> stickerList;
     private List<Tag> tagList;
     private int[] isCreateButtonVisible;
-    private int[] isEditButtonVisible;
     private Context context;
     private StickerList sticker;
     private TagList tag;
     private Category category;
     private int UI_vis[] = {View.GONE, View.VISIBLE, View.INVISIBLE};
 
-    public StickerAdapter(Context c, List<Sticker> stickerList, int[] isCreateButtonVisible, int[] isEditButtonVisible, Category category){
+    public StickerAdapter(Context c, List<Sticker> stickerList, int[] isCreateButtonVisible, Category category){
         inflater = LayoutInflater.from(c);
         this.stickerList = stickerList;
         this.isCreateButtonVisible = isCreateButtonVisible;
-        this.isEditButtonVisible = isEditButtonVisible;
         this.context = c;
         this.sticker = new StickerList();
         this.category = category;
@@ -74,13 +73,13 @@ public class StickerAdapter extends BaseAdapter {
     public View getView(final int i, View view, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.sticker_item,viewGroup,false);
         TextView title, description;
-        Button createButton, deleteButton, editButton;
+        ImageButton editButton;
+        Button createButton;
         TableRow tagRow;
         title = (TextView)view.findViewById(R.id.sticker_title);
         description = (TextView)view.findViewById(R.id.sticker_deadline);
         createButton = (Button)view.findViewById(R.id.create_sticker);
-        deleteButton = (Button)view.findViewById(R.id.delete_sticker);
-        editButton = (Button)view.findViewById(R.id.edit_sticker);
+        editButton = (ImageButton)view.findViewById(R.id.edit_sticker);
         tagRow = (TableRow)view.findViewById(R.id.stickerTagRow);
         if(i > 0){
             title.setText(stickerList.get(i - 1).getTitle());
@@ -92,9 +91,7 @@ public class StickerAdapter extends BaseAdapter {
         title.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         description.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         tagRow.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
-        deleteButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
-        deleteButton.setOnClickListener(deleteListener(i));
-        editButton.setVisibility(UI_vis[isEditButtonVisible[i]]);
+        editButton.setVisibility(UI_vis[(isCreateButtonVisible[i] + 1) % 2]);
         editButton.setOnClickListener(editListener(i));
         return view;
     }
@@ -139,44 +136,11 @@ public class StickerAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(context, sticker_page.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("Category", category);
-                bundle.putSerializable("Sticker", stickerList.get(position - 1));
-                bundle.putString("State", context.getResources().getStringArray(R.array.sticker_state)[1]);
+                bundle.putInt("CategoryID", category.getCategoryID());
+                bundle.putInt("StickerID", stickerList.get(position - 1).getStickerID());
+                bundle.putString("State", context.getResources().getStringArray(R.array.sticker_state)[2]);
                 intent.putExtra("Bundle", bundle);
                 context.startActivity(intent);
-            }
-        };
-    }
-
-    private View.OnClickListener deleteListener(final int position){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog = new Dialog(v.getContext());
-                dialog.setContentView(R.layout.popup_reconfirmation);
-                dialog.setTitle("確認");
-                TextView text = (TextView)dialog.findViewById(R.id.reconfirm_text);
-                Button confirm = (Button)dialog.findViewById(R.id.confirm);
-                Button concel = (Button)dialog.findViewById(R.id.concel);
-                text.setText("確定要刪除嗎?");
-                dialog.show();
-                confirm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        sticker.deleteSticker(stickerList.get(position - 1));
-                        ((sticker_list)context).update();
-                        if(context instanceof category_list){
-                            ((category_list)context).updateView();
-                        }
-                        dialog.dismiss();
-                    }
-                });
-                concel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
             }
         };
     }

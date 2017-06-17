@@ -10,37 +10,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:descendantFocusability="beforeDescendants"
-        android:focusableInTouchMode="true"
-        android:gravity="right"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/searchInput"
-            android:layout_width="275dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Search" />
-
-        <Button
-            android:id="@+id/setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.22"
-            android:text="編輯" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <ListView
             android:id="@+id/sticker_list"
             android:layout_width="match_parent"
-            android:layout_height="465dp" />
+            android:layout_height="515dp" />
     </LinearLayout>
 
     <LinearLayout
