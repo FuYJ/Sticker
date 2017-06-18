@@ -109,9 +109,9 @@ public class StickerList {
                     break;
                 case TAG:
                     if(where == "")
-                        where += IDataAccessObject.TAG_TABLE + "." + IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += IDataAccessObject.NEST_TABLE1 + "." + IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
                     else
-                        where += " OR " + IDataAccessObject.TAG_TABLE + "." + IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += " OR " + IDataAccessObject.NEST_TABLE1 + "." + IDataAccessObject.TAG_TITLE + " LIKE \"%" + keyword + "%\"";
                     break;
             }
         }

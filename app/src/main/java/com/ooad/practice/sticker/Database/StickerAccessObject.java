@@ -62,7 +62,7 @@ public class StickerAccessObject implements IDataAccessObject {
                 + " WHERE " + STICKER_TAGS_TABLE + "." + STICKER_TAGS_TAG_ID + " = " + TAG_TABLE + "." + TAG_ID;
         String rawQuery = "SELECT DISTINCT * FROM " + STICKER_TABLE
                 + " INNER JOIN " + CATEGORY_TABLE + " ON " + STICKER_TABLE + "." + STICKER_CATEGORY_ID + " = " + CATEGORY_TABLE + "." + CATEGORY_ID
-                + " LEFT OUTER JOIN (" + nestQuery1 + ") AS N1 ON " + STICKER_TABLE + "." + STICKER_ID + " = " + "N1" + "." + STICKER_TAGS_TAG_ID
+                + " LEFT OUTER JOIN (" + nestQuery1 + ") AS " + NEST_TABLE1 + " ON " + STICKER_TABLE + "." + STICKER_ID + " = " + NEST_TABLE1 + "." + STICKER_TAGS_TAG_ID
                 + " WHERE " + where
                 + " ORDER BY " + orderBy;
         Cursor cursor = db.rawQuery(rawQuery, null);
