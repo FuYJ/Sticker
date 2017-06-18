@@ -72,9 +72,11 @@ public class CategoryList {
         String where = IDataAccessObject.CATEGORY_TITLE + " = \"" + category.getTitle() + "\"";
         try{
             JSONArray categoriesWithSameTitle = categoryDAO.retrieveWhere(where);
-            int categoryIDWithSameTitle = categoriesWithSameTitle.getJSONObject(0).getInt(IDataAccessObject.CATEGORY_ID);
-            if(categoriesWithSameTitle.length() > 0 &&  categoryIDWithSameTitle != category.getCategoryID());
-                return -1;
+            if(categoriesWithSameTitle.length() > 0){
+                int categoryIDWithSameTitle = categoriesWithSameTitle.getJSONObject(0).getInt(IDataAccessObject.CATEGORY_ID);
+                if(categoryIDWithSameTitle != category.getCategoryID())
+                    return -1;
+            }
         } catch (JSONException e){
             Log.e(this.getClass().toString(), e.getMessage());
         }
