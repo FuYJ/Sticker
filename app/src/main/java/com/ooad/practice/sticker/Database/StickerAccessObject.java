@@ -66,7 +66,6 @@ public class StickerAccessObject implements IDataAccessObject {
                 + " WHERE " + where
                 + " ORDER BY " + orderBy;
         Cursor cursor = db.rawQuery(rawQuery, null);
-        //Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
         JSONArray jArr = putRowsIntoJSONArray(cursor);
         cursor.close();
         return jArr;

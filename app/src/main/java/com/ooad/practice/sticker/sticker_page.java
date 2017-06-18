@@ -1,28 +1,19 @@
 package com.ooad.practice.sticker;
 
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,18 +21,12 @@ import com.ooad.practice.sticker.Bean.Category;
 import com.ooad.practice.sticker.Bean.Sticker;
 import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Model.CategoryList;
-import com.ooad.practice.sticker.Model.Reminder;
-import com.ooad.practice.sticker.Model.ReminderAlarmReceiver;
 import com.ooad.practice.sticker.Model.StickerList;
 import com.ooad.practice.sticker.Model.TagList;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import Adapter.StickerAdapter;
 import Adapter.TagAdapter;
 import ColorPickerDialog.ColorPickerDialog;
 
@@ -382,19 +367,6 @@ public class sticker_page extends ActionBarActivity {
                 description.getText().toString(), deadline.getText().toString(),
                 remind.getText().toString(), isFinished.isChecked());
         int stickerID = stickerList.setSticker(temp);
-
-        Context context = getBaseContext();
-        Intent intent = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putLong("stickerRemindTime", temp.calculateDate(temp.getRemindTime()));
-        bundle.putString("stickerTitle", temp.getTitle());
-        bundle.putInt("stickerID", temp.getStickerID());
-        bundle.putBoolean("operationCode", true);
-        intent.putExtra("Bundle", bundle);
-        PendingIntent pending = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarm.set(AlarmManager.RTC_WAKEUP, temp.calculateDate(temp.getRemindTime()), pending);
-
         for(int i = 0; i < stickerTagList.size(); i++)
             stickerList.setTagToSticker(stickerList.getStickerByStickerId(stickerID), stickerTagList.get(i));
         this.finish();
