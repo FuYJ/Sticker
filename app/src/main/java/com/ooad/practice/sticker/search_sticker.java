@@ -134,15 +134,13 @@ public class search_sticker extends ActionBarActivity {
         return new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id){
-                if(position > 0){
-                    Intent intent = new Intent(search_sticker.this, sticker_page.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("CategoryID", sticker.get(position).getCategoryID());
-                    bundle.putInt("StickerID", sticker.get(position).getStickerID());
-                    bundle.putString("State", getApplicationContext().getResources().getStringArray(R.array.sticker_state)[2]);
-                    intent.putExtra("Bundle", bundle);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(search_sticker.this, sticker_page.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("CategoryID", sticker.get(position).getCategoryID());
+                bundle.putInt("StickerID", sticker.get(position).getStickerID());
+                bundle.putString("State", getApplicationContext().getResources().getStringArray(R.array.sticker_state)[2]);
+                intent.putExtra("Bundle", bundle);
+                startActivity(intent);
             }
         };
     }

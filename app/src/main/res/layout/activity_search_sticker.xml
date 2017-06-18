@@ -39,7 +39,7 @@
         <ListView
             android:id="@+id/sticker_list"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="465dp" />
     </LinearLayout>
 
     <LinearLayout
