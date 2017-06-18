@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 /**
  * Created by fuyiru on 2017/5/21.
  */
-public class CategoryListTest {
+public class testCategoryList {
     Mockery context1 = new Mockery();
     IDataAccessObject categoryDAO = context1.mock(IDataAccessObject.class);
     Mockery context2 = new Mockery();

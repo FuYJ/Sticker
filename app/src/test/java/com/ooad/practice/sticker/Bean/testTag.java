@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /**
  * Created by fuyiru on 2017/6/17.
  */
-public class TagTest {
+public class testTag {
     private Tag tag1;
     private Tag tag2;
     private Integer tagID = 0;
@@ -54,5 +54,4 @@ public class TagTest {
         assertEquals(expected.getInt(IDataAccessObject.TAG_COLOR_G), jObj2.getInt(IDataAccessObject.TAG_COLOR_G));
         assertEquals(expected.getInt(IDataAccessObject.TAG_COLOR_B), jObj2.getInt(IDataAccessObject.TAG_COLOR_B));
     }
-
 }

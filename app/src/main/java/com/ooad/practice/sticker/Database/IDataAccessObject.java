@@ -1,8 +1,5 @@
 package com.ooad.practice.sticker.Database;
 
-import android.content.ContentValues;
-import android.content.Context;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 

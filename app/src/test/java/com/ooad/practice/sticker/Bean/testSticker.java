@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 /**
  * Created by fuyiru on 2017/5/28.
  */
-public class StickerTest {
+public class testSticker {
     Mockery context = new Mockery(){{
         setImposteriser(ClassImposteriser.INSTANCE);
     }};
@@ -99,5 +99,4 @@ public class StickerTest {
         String expectedTime = date2;
         assertEquals(expectedTime, calculatedTime);
     }
-
 }

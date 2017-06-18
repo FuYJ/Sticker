@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 /**
  * Created by fuyiru on 2017/6/12.
  */
-public class TagListTest {
+public class testTagList {
     Mockery context1 = new Mockery();
     Mockery context2 = new Mockery();
     IDataAccessObject tagDAO = context1.mock(IDataAccessObject.class);
@@ -118,7 +118,15 @@ public class TagListTest {
 
     @Test
     public void deleteTag() throws Exception {
-
+        context1.checking(new Expectations(){{
+            oneOf(tagDAO).deleteOne(with(1));
+        }});
+        context2.checking(new Expectations(){{
+            oneOf(stickerTagsDAO).deleteWhere(with(equal("tagID = \"1\"")));
+        }});
+        Tag tag = new Tag(1, "5", 5, 5, 5);
+        tagList.deleteTag(tag);
+        context1.assertIsSatisfied();
+        context2.assertIsSatisfied();
     }
-
 }

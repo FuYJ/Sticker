@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by fuyiru on 2017/5/4.

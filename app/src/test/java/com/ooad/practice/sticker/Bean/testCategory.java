@@ -6,14 +6,12 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 /**
  * Created by fuyiru on 2017/6/17.
  */
-public class CategoryTest {
+public class testCategory {
     private Category category1;
     private Category category2;
     private Integer categoryID = 0;
@@ -30,7 +28,6 @@ public class CategoryTest {
         jObj1.put(IDataAccessObject.CATEGORY_DESCRIPTION, categoryDescription);
         category2 = new Category(jObj1);
         assertEquals(category1.getCategoryID(), category2.getCategoryID());
-
     }
 
     @Test
@@ -43,7 +40,5 @@ public class CategoryTest {
         assertEquals(expected.getInt(IDataAccessObject.CATEGORY_ID), jObj2.getInt(IDataAccessObject.CATEGORY_ID));
         assertEquals(expected.getString(IDataAccessObject.CATEGORY_TITLE), jObj2.getString(IDataAccessObject.CATEGORY_TITLE));
         assertEquals(expected.getString(IDataAccessObject.CATEGORY_DESCRIPTION), jObj2.getString(IDataAccessObject.CATEGORY_DESCRIPTION));
-
     }
-
 }

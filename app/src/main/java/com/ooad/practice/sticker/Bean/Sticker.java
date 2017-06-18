@@ -5,10 +5,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ooad.practice.sticker.Database.IDataAccessObject;
-import com.ooad.practice.sticker.MainActivity;
 import com.ooad.practice.sticker.MainApplication;
 import com.ooad.practice.sticker.R;
-import com.ooad.practice.sticker.Settings;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +15,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;

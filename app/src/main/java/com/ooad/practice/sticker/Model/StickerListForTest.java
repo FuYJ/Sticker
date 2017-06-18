@@ -1,16 +1,11 @@
 package com.ooad.practice.sticker.Model;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.ooad.practice.sticker.Bean.Sticker;
 import com.ooad.practice.sticker.Bean.Tag;
 import com.ooad.practice.sticker.Database.IDataAccessObject;
-import com.ooad.practice.sticker.Database.StickerAccessObject;
-import com.ooad.practice.sticker.Database.StickerTagsAccessObject;
-import com.ooad.practice.sticker.MainActivity;
-import com.ooad.practice.sticker.MainApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,19 +18,17 @@ import java.util.List;
  * Created by fuyiru on 2017/5/5.
  */
 
-public class StickerList {
+public class StickerListForTest extends StickerList {
     private IDataAccessObject stickerDAO;
     private IDataAccessObject stickerTagsDAO;
+    private SharedPreferences sharedPreferences;
+    private Long currentTime;
 
-    public StickerList(){
-        Context context = MainApplication.getContext();
-        stickerDAO = new StickerAccessObject(context);
-        stickerTagsDAO = new StickerTagsAccessObject(context);
-    }
-
-    public StickerList(IDataAccessObject stickerDAO, IDataAccessObject stickerTagsDAO){
+    public StickerListForTest(IDataAccessObject stickerDAO, IDataAccessObject stickerTagsDAO, SharedPreferences sharedPreferences, Long currentTime){
         this.stickerDAO = stickerDAO;
         this.stickerTagsDAO = stickerTagsDAO;
+        this.sharedPreferences = sharedPreferences;
+        this.currentTime = currentTime;
     }
 
     public Sticker getStickerByStickerId(Integer stickerID){
@@ -53,9 +46,7 @@ public class StickerList {
         for(int i = 0; i < jArr.length(); i++){
             try {
                 JSONObject jObj = jArr.getJSONObject(i);
-                Sticker sticker = new Sticker(jObj);
-                List<Tag> tagList = new TagList().getTagListByStickerId(sticker.getStickerID());
-                sticker.setTagList(tagList);
+                Sticker sticker = new Sticker(jObj, sharedPreferences);
                 result.add(sticker);
             }
             catch (JSONException e){
@@ -74,9 +65,7 @@ public class StickerList {
         for(int i = 0; i < jArr.length(); i++){
             try {
                 JSONObject jObj = jArr.getJSONObject(i);
-                Sticker sticker = new Sticker(jObj);
-                List<Tag> tagList = new TagList().getTagListByStickerId(sticker.getStickerID());
-                sticker.setTagList(tagList);
+                Sticker sticker = new Sticker(jObj, sharedPreferences);
                 result.add(sticker);
             }
             catch (JSONException e){
@@ -166,14 +155,12 @@ public class StickerList {
 
     public List<Sticker> getEmergentList(){
         List<Sticker> result = new ArrayList<>();
-        String where = IDataAccessObject.STICKER_REMIND_TIME + " < " + System.currentTimeMillis() + " AND " + IDataAccessObject.STICKER_IS_FINISHED + " = 0";
+        String where = IDataAccessObject.STICKER_REMIND_TIME + " < " + currentTime + " AND " + IDataAccessObject.STICKER_IS_FINISHED + " = 0";
         JSONArray jArr = stickerDAO.retrieveWhere(where);
         try {
             for(int i = 0; i < jArr.length(); i++){
                 JSONObject jObj = jArr.getJSONObject(i);
-                Sticker sticker = new Sticker(jObj);
-                List<Tag> tagList = new TagList().getTagListByStickerId(sticker.getStickerID());
-                sticker.setTagList(tagList);
+                Sticker sticker = new Sticker(jObj, sharedPreferences);
                 result.add(sticker);
             }
         }
