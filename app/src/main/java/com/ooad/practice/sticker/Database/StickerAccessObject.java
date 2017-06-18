@@ -58,7 +58,15 @@ public class StickerAccessObject implements IDataAccessObject {
     @Override
     public JSONArray retrieveWhere(String where) {
         String orderBy = stickerID + " " + ORDER_ASC;
-        Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
+        String nestQuery1 = "SELECT DISTINCT * FROM " + STICKER_TAGS_TABLE + ", " + TAG_TABLE
+                + " WHERE " + STICKER_TAGS_TABLE + "." + STICKER_TAGS_TAG_ID + " = " + TAG_TABLE + "." + TAG_ID;
+        String rawQuery = "SELECT DISTINCT * FROM " + STICKER_TABLE
+                + " INNER JOIN " + CATEGORY_TABLE + " ON " + STICKER_TABLE + "." + STICKER_CATEGORY_ID + " = " + CATEGORY_TABLE + "." + CATEGORY_ID
+                + " LEFT OUTER JOIN (" + nestQuery1 + ") AS N1 ON " + STICKER_TABLE + "." + STICKER_ID + " = " + "N1" + "." + STICKER_TAGS_TAG_ID
+                + " WHERE " + where
+                + " ORDER BY " + orderBy;
+        Cursor cursor = db.rawQuery(rawQuery, null);
+        //Cursor cursor = db.query(tableName, null, where, null, null, null, orderBy);
         JSONArray jArr = putRowsIntoJSONArray(cursor);
         cursor.close();
         return jArr;
