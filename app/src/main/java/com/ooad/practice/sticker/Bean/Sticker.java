@@ -34,11 +34,13 @@ public class Sticker implements Serializable {
     private String description;
     private String deadline;
     private String remindTime;
+    private String selectedCalendar;
     private List<Tag> tagList;
     private Boolean isFinished;
     private SharedPreferences sharedPreferences;
 
     public Sticker(Integer stickerID, Integer categoryID, String title, String description, String deadline, String remindTime, Boolean isFinished){
+        this.selectedCalendar = MainApplication.getContext().getResources().getString(R.string.calendars);
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());
         this.stickerID = stickerID;
         this.categoryID = categoryID;
@@ -50,6 +52,7 @@ public class Sticker implements Serializable {
     }
 
     public Sticker(Integer stickerID, Integer categoryID, String title, String description, String deadline, String remindTime, Boolean isFinished, SharedPreferences sharedPreferences){
+        this.selectedCalendar = "";
         this.sharedPreferences = sharedPreferences;
         this.stickerID = stickerID;
         this.categoryID = categoryID;
@@ -61,6 +64,7 @@ public class Sticker implements Serializable {
     }
 
     public Sticker(JSONObject jObj){
+        this.selectedCalendar = MainApplication.getContext().getResources().getString(R.string.calendars);
         try {
             this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getContext());
             this.stickerID = jObj.getInt(IDataAccessObject.STICKER_ID);
@@ -77,6 +81,7 @@ public class Sticker implements Serializable {
     }
 
     public Sticker(JSONObject jObj, SharedPreferences sharedPreferences){
+        this.selectedCalendar = "";
         try {
             this.sharedPreferences = sharedPreferences;
             this.stickerID = jObj.getInt(IDataAccessObject.STICKER_ID);
@@ -151,7 +156,6 @@ public class Sticker implements Serializable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         formattedDate = "";
         Calendar calendar = Calendar.getInstance();
-        String selectedCalendar = MainApplication.getContext().getResources().getString(R.string.calendars);
         if(sharedPreferences.getString(selectedCalendar, "西元曆").equals("國曆")){
             calendar.setTimeInMillis(date);
             calendar.add(Calendar.YEAR, -1911);
@@ -170,7 +174,6 @@ public class Sticker implements Serializable {
         try {
             Calendar calendar = Calendar.getInstance();
             dateTime = sdf.parse(date).getTime();
-            String selectedCalendar = MainApplication.getContext().getResources().getString(R.string.calendars);
             if(sharedPreferences.getString(selectedCalendar, "西元曆").equals("國曆")){
                 calendar.setTimeInMillis(dateTime);
                 calendar.add(Calendar.YEAR, 1911);
