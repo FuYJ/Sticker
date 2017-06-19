@@ -64,6 +64,7 @@ public interface IDataAccessObject {
                     STICKER_TAGS_STICKER_ID + " INTEGER NOT NULL)";
 
     String NEST_TABLE1 = "N1";
+    String NEST_TABLE2 = "NEST_TABLE2";
 
     String ORDER_ASC = " ASC";
     String ORDER_DESC = " DESC";

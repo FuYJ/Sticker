@@ -91,9 +91,9 @@ public class StickerList {
             switch(st){
                 case STICKER:
                     if(where == "")
-                        where += IDataAccessObject.STICKER_TABLE + "." + IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += IDataAccessObject.NEST_TABLE2 + "." + IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
                     else
-                        where += " OR " + IDataAccessObject.STICKER_TABLE + "." + IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
+                        where += " OR " + IDataAccessObject.NEST_TABLE2 + "." + IDataAccessObject.STICKER_TITLE + " LIKE \"%" + keyword + "%\"";
                     break;
                 case CATEGORY:
                     if(where == "")
@@ -115,15 +115,15 @@ public class StickerList {
     private String addWhereConstraintsAccordingToSearchIsFinished(String where, IDataAccessObject.SearchIsFinished searchIsFinished){
         if(searchIsFinished == IDataAccessObject.SearchIsFinished.FINISHED){
             if(where == "")
-                where += IDataAccessObject.STICKER_TABLE + "." + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
+                where += IDataAccessObject.NEST_TABLE2 + "." + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
             else
-                where += " AND " + IDataAccessObject.STICKER_TABLE + "." + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
+                where += " AND " + IDataAccessObject.NEST_TABLE2 + "." + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.FINISHED.ordinal());
         }
         else{
             if(where == "")
-                where += IDataAccessObject.STICKER_TABLE + "." + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
+                where += IDataAccessObject.NEST_TABLE2 + "." + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
             else
-                where += " AND " + IDataAccessObject.STICKER_TABLE + "." + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
+                where += " AND " + IDataAccessObject.NEST_TABLE2 + "." + IDataAccessObject.STICKER_IS_FINISHED + " = " + String.valueOf(IDataAccessObject.SearchIsFinished.UNFINISHED.ordinal());
         }
         return where;
     }

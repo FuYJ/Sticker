@@ -60,9 +60,14 @@ public class StickerAccessObject implements IDataAccessObject {
         String orderBy = stickerID + " " + ORDER_ASC;
         String nestQuery1 = "SELECT DISTINCT * FROM " + STICKER_TAGS_TABLE + ", " + TAG_TABLE
                 + " WHERE " + STICKER_TAGS_TABLE + "." + STICKER_TAGS_TAG_ID + " = " + TAG_TABLE + "." + TAG_ID;
-        String rawQuery = "SELECT DISTINCT * FROM " + STICKER_TABLE
+        /*String rawQuery = "SELECT DISTINCT * FROM " + STICKER_TABLE
                 + " INNER JOIN " + CATEGORY_TABLE + " ON " + STICKER_TABLE + "." + STICKER_CATEGORY_ID + " = " + CATEGORY_TABLE + "." + CATEGORY_ID
                 + " LEFT OUTER JOIN (" + nestQuery1 + ") AS " + NEST_TABLE1 + " ON " + STICKER_TABLE + "." + STICKER_ID + " = " + NEST_TABLE1 + "." + STICKER_TAGS_STICKER_ID
+                + " WHERE " + where
+                + " ORDER BY " + orderBy;*/
+        String rawQuery = "SELECT DISTINCT " + NEST_TABLE2 + ".* FROM " + STICKER_TABLE + " " + NEST_TABLE2
+                + " INNER JOIN " + CATEGORY_TABLE + " ON " + NEST_TABLE2 + "." + STICKER_CATEGORY_ID + " = " + CATEGORY_TABLE + "." + CATEGORY_ID
+                + " LEFT OUTER JOIN (" + nestQuery1 + ") " + NEST_TABLE1 + " ON " + NEST_TABLE2 + "." + STICKER_ID + " = " + NEST_TABLE1 + "." + STICKER_TAGS_STICKER_ID
                 + " WHERE " + where
                 + " ORDER BY " + orderBy;
         Cursor cursor = db.rawQuery(rawQuery, null);
